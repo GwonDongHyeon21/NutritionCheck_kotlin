@@ -64,3 +64,13 @@ fun TabLayout() {
         }
     }
 }
+
+val nutritionData = listOf(
+    "열량" to (1500f to 2000f), // 2000kcal 기준
+    "탄수화물" to (140f to 324f),
+    "당류" to (20f to 100f),
+    "단백질" to (14f to 55f),
+    "지방" to (20f to 54f),
+    "포화지방" to (20f to 15f),
+    "나트륨" to (1000f to 2000f),
+)

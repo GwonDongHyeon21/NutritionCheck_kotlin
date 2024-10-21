@@ -88,7 +88,6 @@ fun NutritionCheckMainLayout() {
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
                     .padding(start = 10.dp)
-                    .shadow(4.dp)
                     .border(1.dp, Color.Black, RoundedCornerShape(20.dp)),
                 shape = RoundedCornerShape(20.dp),
                 placeholder = { Text("점심 식사") },
