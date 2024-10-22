@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun NutritionCheckTodayLayout() {
+fun NutritionTodayChartLayout() {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
@@ -82,6 +82,6 @@ fun NutritionCheckChart(label: String, value: Float, maxValue: Float) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewNutritionToday() {
-    NutritionCheckTodayLayout()
+fun PreviewNutritionTodayChart() {
+    NutritionTodayChartLayout()
 }

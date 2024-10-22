@@ -6,13 +6,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -31,13 +27,12 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NutritionCheckCalendarLayout() {
+fun NutritionCalendarLayout() {
     val datePickerState = rememberDatePickerState()
     val coroutineScope = rememberCoroutineScope()
     var isLoading by remember { mutableStateOf(false) }
@@ -57,26 +52,26 @@ fun NutritionCheckCalendarLayout() {
             }
         )
 
-        if (isLoading) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 40.dp, end = 40.dp, bottom = 80.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                nutritionData.forEach { (label, values) ->
-                    DateNutritionChart(label, values.first, values.second)
-                }
-            }
-        } else {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = "날짜를 선택하세요.")
+//        if (isLoading) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 40.dp, end = 40.dp, bottom = 80.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            nutritionData.forEach { (label, values) ->
+                DateNutritionChart(label, values.first, values.second)
             }
         }
+//        } else {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "날짜를 선택하세요.")
+        }
+//        }
 
 //        Text(
 //            text = SimpleDateFormat(
@@ -114,21 +109,22 @@ fun DateNutritionChart(label: String, value: Float, maxValue: Float) {
 
         Text(
             text = label,
-            modifier = Modifier.padding(top = 5.dp)
+            modifier = Modifier
+                .padding(top = 5.dp),
+        )
+
+        val nutritionPercentage = (value / maxValue * 100).toInt()
+        Text(
+            text = "($nutritionPercentage%)",
+            modifier = Modifier
+                .padding(top = 5.dp),
         )
     }
-
-//    val nutritionPercentage = (value / maxValue * 100).toInt()
-//    Text(
-//        text = "${value.toInt()}/${maxValue.toInt()}($nutritionPercentage%)",
-//        modifier = Modifier
-//            .padding(top = 10.dp, end = 30.dp)
-//    )
 }
 
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewCheckCalendar() {
-    NutritionCheckCalendarLayout()
+fun PreviewNutritionCalendar() {
+    NutritionCalendarLayout()
 }

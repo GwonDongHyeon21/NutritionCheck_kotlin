@@ -13,7 +13,7 @@
         android:theme="@style/Theme.NutritionCheck_composable"
         tools:targetApi="31">
         <activity
-            android:name=".NutritionCheckMain"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.NutritionCheck_composable">
             <intent-filter>

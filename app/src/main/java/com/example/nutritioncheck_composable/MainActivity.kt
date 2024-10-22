@@ -4,11 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Icon
@@ -18,22 +18,57 @@ import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 
-class NutritionCheckMain : ComponentActivity() {
+val nutritionData = listOf(
+    "열량" to (1500f to 2000f), // 2000kcal 기준
+    "탄수화물" to (140f to 324f),
+    "당류" to (20f to 100f),
+    "단백질" to (14f to 55f),
+    "지방" to (20f to 54f),
+    "포화지방" to (20f to 15f),
+    "나트륨" to (1000f to 2000f),
+)
+
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            TabLayout()
+            NutritionNavigator()
+        }
+    }
+}
+
+@Composable
+fun NutritionNavigator() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "TabLayout") {
+        composable("TabLayout") {
+            TabLayout(navController)
+        }
+        composable("NutritionToday") {
+            NutritionTodayLayout(navController)
+        }
+        composable("NutritionAdd") {
+            NutritionAdd()
         }
     }
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TabLayout() {
-    val tabs = listOf(Icons.Filled.Check, Icons.AutoMirrored.Filled.List, Icons.Filled.DateRange)
+fun TabLayout(navController: NavController) {
+    val tabs = listOf(
+        Icons.Filled.Check,
+        Icons.AutoMirrored.Filled.List,
+        Icons.Filled.DateRange,
+        Icons.Filled.AccountCircle
+    )
     val pagerState = rememberPagerState(0, 0f) { tabs.size }
     val coroutineScope = rememberCoroutineScope()
 
@@ -57,20 +92,17 @@ fun TabLayout() {
             state = pagerState,
         ) { page ->
             when (page) {
-                0 -> NutritionCheckMainLayout()
-                1 -> NutritionCheckTodayLayout()
-                2 -> NutritionCheckCalendarLayout()
+                0 -> NutritionTodayLayout(navController)
+                1 -> NutritionTodayChartLayout()
+                2 -> NutritionCalendarLayout()
+                3 -> NutritionUserInfo()
             }
         }
     }
 }
 
-val nutritionData = listOf(
-    "열량" to (1500f to 2000f), // 2000kcal 기준
-    "탄수화물" to (140f to 324f),
-    "당류" to (20f to 100f),
-    "단백질" to (14f to 55f),
-    "지방" to (20f to 54f),
-    "포화지방" to (20f to 15f),
-    "나트륨" to (1000f to 2000f),
-)
+@Preview(showBackground = true)
+@Composable
+fun PreviewTabLayout() {
+    TabLayout(rememberNavController())
+}
