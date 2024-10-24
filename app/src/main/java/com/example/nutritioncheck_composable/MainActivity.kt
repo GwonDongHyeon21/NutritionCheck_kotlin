@@ -29,10 +29,15 @@ val nutritionData = listOf(
     "열량" to (1500f to 2000f), // 2000kcal 기준
     "탄수화물" to (140f to 324f),
     "당류" to (20f to 100f),
+    "식이섬유" to (20f to 25f),
     "단백질" to (14f to 55f),
     "지방" to (20f to 54f),
     "포화지방" to (20f to 15f),
+    "콜레스테롤" to (200f to 300f),
     "나트륨" to (1000f to 2000f),
+    "칼륨" to (1000f to 3500f),
+    "비타민A" to (100f to 700f),
+    "비타민C" to (90f to 100f),
 )
 
 class MainActivity : ComponentActivity() {
@@ -55,7 +60,7 @@ fun NutritionNavigator() {
             NutritionTodayLayout(navController)
         }
         composable("NutritionAdd") {
-            NutritionAdd()
+            NutritionAddLayout()
         }
     }
 }
@@ -67,7 +72,7 @@ fun TabLayout(navController: NavController) {
         Icons.Filled.Check,
         Icons.AutoMirrored.Filled.List,
         Icons.Filled.DateRange,
-        Icons.Filled.AccountCircle
+//        Icons.Filled.AccountCircle
     )
     val pagerState = rememberPagerState(0, 0f) { tabs.size }
     val coroutineScope = rememberCoroutineScope()
@@ -95,7 +100,7 @@ fun TabLayout(navController: NavController) {
                 0 -> NutritionTodayLayout(navController)
                 1 -> NutritionTodayChartLayout()
                 2 -> NutritionCalendarLayout()
-                3 -> NutritionUserInfo()
+//                3 -> NutritionUserInfoLayout()
             }
         }
     }

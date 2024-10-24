@@ -23,7 +23,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun NutritionTodayChartLayout() {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 40.dp),
         verticalArrangement = Arrangement.Center
     ) {
         Column(
@@ -47,12 +49,12 @@ fun NutritionCheckChart(label: String, value: Float, maxValue: Float) {
                 text = label,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .fillMaxWidth(0.16f),
+                    .fillMaxWidth(0.2f),
             )
 
             Canvas(
                 modifier = Modifier
-                    .height(30.dp)
+                    .height(25.dp)
                     .weight(1f)
                     .shadow(10.dp)
                     .background(Color(230, 230, 230, 255))
@@ -75,7 +77,7 @@ fun NutritionCheckChart(label: String, value: Float, maxValue: Float) {
             text = "${value.toInt()}/${maxValue.toInt()}($nutritionPercentage%)",
             modifier = Modifier
                 .align(Alignment.End)
-                .padding(top = 10.dp, end = 30.dp)
+                .padding(top = 5.dp, end = 25.dp)
         )
     }
 }
