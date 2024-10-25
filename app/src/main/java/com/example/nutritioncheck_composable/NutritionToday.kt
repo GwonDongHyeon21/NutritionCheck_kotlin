@@ -23,9 +23,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.nutritioncheck_composable.database.getDataFromFirebase
+import java.time.LocalDate
 
 @Composable
 fun NutritionTodayLayout(navController: NavController) {
+    val date = LocalDate.now().toString()
+
     Column(
         modifier = Modifier
             .padding(start = 40.dp, end = 40.dp, top = 40.dp, bottom = 60.dp),
@@ -55,14 +59,17 @@ fun NutritionTodayLayout(navController: NavController) {
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
-            ){
+            ) {
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
                         .fillMaxHeight(0.7f)
                         .shadow(10.dp, RoundedCornerShape(16.dp))
                         .clickable {
-                            navController.navigate("NutritionAdd/아침")
+                            getDataFromFirebase(date, "아침") {
+                                dateFoodList = it
+                                navController.navigate("NutritionAdd/아침")
+                            }
                         },
                 ) {
                     //데이터 가져오기
@@ -104,7 +111,7 @@ fun NutritionTodayLayout(navController: NavController) {
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
-            ){
+            ) {
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
@@ -153,7 +160,7 @@ fun NutritionTodayLayout(navController: NavController) {
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
-            ){
+            ) {
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth(0.8f)

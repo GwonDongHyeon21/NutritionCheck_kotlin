@@ -4,24 +4,18 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -30,12 +24,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.nutritioncheck_composable.database.getDataFromFirebase
-import com.example.nutritioncheck_composable.model.NutritionDataModel
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.launch
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
+import kotlinx.coroutines.launch
 
 val nutritionData = listOf(
     "열량" to (1500f to 2000f), // 2000kcal 기준
@@ -98,10 +90,6 @@ class MainActivity : ComponentActivity() {
                 }
         } else {
             ValueSingleton.uid = auth.currentUser?.uid ?: ""
-            getDataFromFirebase {  }
-//            getDataFromFirebase { nutritionDataInfo ->
-//                dateFoodList = nutritionDataInfo
-//            }
         }
     }
 }

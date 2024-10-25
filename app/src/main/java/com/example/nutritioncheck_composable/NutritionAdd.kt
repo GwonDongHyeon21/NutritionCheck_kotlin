@@ -91,7 +91,10 @@ fun NutritionAddLayout(meal: String) {
             modifier = Modifier
                 .padding(bottom = 60.dp)
                 .align(Alignment.BottomCenter),
-            onClick = { addDataToFirebase(date, meal, dateFoodList) }
+            onClick = {
+                addDataToFirebase(date, meal, dateFoodList)
+                dateFoodList = mutableListOf()
+            }
         ) {
             Text(text = "저장")
         }

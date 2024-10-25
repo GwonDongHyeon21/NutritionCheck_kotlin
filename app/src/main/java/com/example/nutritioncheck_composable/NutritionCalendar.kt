@@ -104,14 +104,15 @@ fun DateNutritionChart(label: String, value: Float, maxValue: Float) {
                 .shadow(10.dp)
                 .background(Color(230, 230, 230, 255))
         ) {
-            val barHeight =
-                if (value > maxValue) {
-                    size.height
-                } else {
-                    size.height * (value / maxValue)
-                }
+            var isColor = true
+            var barHeight = size.height
+            if (value > maxValue) {
+                isColor = false
+            } else {
+                barHeight *= (value / maxValue)
+            }
             drawRect(
-                color = Color.Blue,
+                color = if (isColor) Color.Blue else Color.Red,
                 topLeft = Offset(0f, size.height - barHeight),
                 size = Size(size.width, barHeight),
             )
