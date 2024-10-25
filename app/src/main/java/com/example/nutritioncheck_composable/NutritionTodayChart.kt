@@ -59,14 +59,15 @@ fun NutritionCheckChart(label: String, value: Float, maxValue: Float) {
                     .shadow(10.dp)
                     .background(Color(230, 230, 230, 255))
             ) {
-                val barWidth =
-                    if (value > maxValue) {
-                        size.width
-                    } else {
-                        size.width * (value / maxValue)
-                    }
+                var isColor = true
+                var barWidth = size.width
+                if (value > maxValue) {
+                    isColor = false
+                } else {
+                    barWidth *= (value / maxValue)
+                }
                 drawRect(
-                    color = Color.Blue,
+                    color = if (isColor) Color.Blue else Color.Red,
                     size = Size(barWidth, size.height),
                 )
             }

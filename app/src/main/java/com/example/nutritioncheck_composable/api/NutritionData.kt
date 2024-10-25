@@ -16,12 +16,12 @@ import java.net.URLEncoder
 
 fun nutritionInfo(food: String) {
     val urlBuilder =
-        StringBuilder("https://apis.data.go.kr/1471000/FoodNtrCpntDbInfo01") // URL
+        StringBuilder("https://apis.data.go.kr/1471000/FoodNtrCpntDbInfo01/getFoodNtrCpntDbInq01") // URL
     urlBuilder.append(
         "?" + URLEncoder.encode(
             "serviceKey",
             "UTF-8"
-        ) + BuildConfig.NUTRITION_DATA_API
+        ) + "=" + BuildConfig.NUTRITION_DATA_API
     ) // Service Key
     urlBuilder.append(
         "&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(
@@ -58,7 +58,6 @@ fun nutritionInfo(food: String) {
     val conn = url.openConnection() as HttpURLConnection
     conn.requestMethod = "GET"
     conn.setRequestProperty("Content-type", "application/json")
-    println("Response code: ${conn.responseCode}")
 
     val rd: BufferedReader = if (conn.responseCode in 200..300) {
         BufferedReader(InputStreamReader(conn.inputStream))
@@ -128,17 +127,17 @@ private fun parseResponse(xml: String) {
                             NutritionDataModel(
                                 foodName.toString(),
                                 calories.toString(),
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
+                                carbohydrate.toString(),
+                                sugar.toString(),
+                                dietaryFiber.toString(),
+                                protein.toString(),
+                                province.toString(),
+                                saturatedFat.toString(),
+                                cholesterol.toString(),
+                                sodium.toString(),
+                                potassium.toString(),
+                                vitaminA.toString(),
+                                vitaminC.toString(),
                             )
                         )
                     }
@@ -152,3 +151,9 @@ private fun parseResponse(xml: String) {
         e.printStackTrace()
     }
 }
+
+//https://apis.data.go.kr/1471000/FoodNtrCpntDbInfo01/getFoodNtrCpntDbInq01
+// ?serviceKey= MhaV5RpnKLUv9MFQZr7AYd96McfCLNFksae09wTWgCQpXD4hQNXIlcAOugChDbrFeGrrB%2BqN%2FjBQJP%2F6pGCQ%2Fw%3D%3D
+// &pageNo=1
+// &numOfRows=3
+// &type=xml

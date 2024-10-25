@@ -134,7 +134,6 @@ fun DateNutritionChart(label: String, value: Float, maxValue: Float) {
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewNutritionCalendar() {

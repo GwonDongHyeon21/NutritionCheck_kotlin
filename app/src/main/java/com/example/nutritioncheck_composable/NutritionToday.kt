@@ -2,7 +2,6 @@ package com.example.nutritioncheck_composable
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -63,7 +62,7 @@ fun NutritionTodayLayout(navController: NavController) {
                         .fillMaxHeight(0.7f)
                         .shadow(10.dp, RoundedCornerShape(16.dp))
                         .clickable {
-                            navController.navigate("NutritionAdd")
+                            navController.navigate("NutritionAdd/아침")
                         },
                 ) {
                     //데이터 가져오기
@@ -112,7 +111,7 @@ fun NutritionTodayLayout(navController: NavController) {
                         .fillMaxHeight(0.7f)
                         .shadow(10.dp, RoundedCornerShape(16.dp))
                         .clickable {
-                            navController.navigate("NutritionAdd")
+                            navController.navigate("NutritionAdd/점심")
                         },
                 ) {
                     //데이터 가져오기
@@ -161,7 +160,7 @@ fun NutritionTodayLayout(navController: NavController) {
                         .fillMaxHeight(0.7f)
                         .shadow(10.dp, RoundedCornerShape(16.dp))
                         .clickable {
-                            navController.navigate("NutritionAdd")
+                            navController.navigate("NutritionAdd/저녁")
                         },
                 ) {
                     //데이터 가져오기
