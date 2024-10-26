@@ -2,20 +2,27 @@ package com.example.nutritioncheck_composable
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -24,10 +31,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.nutritioncheck_composable.database.getDataFromFirebase
+import com.example.nutritioncheck_composable.model.NutritionDataModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 val nutritionData = listOf(
     "열량" to (1500f to 2000f), // 2000kcal 기준
@@ -52,31 +62,46 @@ val db = Firebase.database
 val DB = db.reference
 val uid = ValueSingleton.uid
 
+var breakfastFoodList = mutableListOf<NutritionDataModel>()
+var lunchFoodList = mutableListOf<NutritionDataModel>()
+var dinnerFoodList = mutableListOf<NutritionDataModel>()
+
 class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private val date = LocalDate.now().toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//
-//        setContent {
-//            Column(
-//                modifier = Modifier.fillMaxSize(),
-//                verticalArrangement = Arrangement.Center,
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                CircularProgressIndicator(
-//                    color = Color.Gray,
-//                    trackColor = Color(100, 60, 180, 255),
-//                )
-//            }
-//        }
+
+        setContent {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator(
+                    color = Color.Gray,
+                    trackColor = Color(100, 60, 180, 255),
+                )
+            }
+        }
 
         auth = FirebaseAuth.getInstance()
         signInAnonymously()
 
-        setContent {
-            NutritionNavigator()
+        breakfastFoodList = mutableListOf()
+        lunchFoodList = mutableListOf()
+        dinnerFoodList = mutableListOf()
+
+        getDataFromFirebase(date) {
+            if (it) {
+                setContent {
+                    NutritionNavigator()
+                }
+            } else {
+                //데이터를 불러오지 못한 경우 구현
+            }
         }
     }
 

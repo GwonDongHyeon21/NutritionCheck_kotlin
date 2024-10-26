@@ -53,13 +53,12 @@ fun NutritionCalendarLayout() {
         )
         LaunchedEffect(datePickerState.selectedDateMillis) {
             if (datePickerState.selectedDateMillis != null) {
-                coroutineScope.launch(Dispatchers.IO) {
+//                coroutineScope.launch(Dispatchers.IO) {
                     text = "잠시만 기다려주세요."
                     isLoading = false
                     // 데이터 불러오기
-                    kotlinx.coroutines.delay(500L) //예시로 0.5초 지연
                     isLoading = true
-                }
+//                }
             }
         }
 
@@ -125,13 +124,6 @@ fun DateNutritionChart(label: String, value: Float, maxValue: Float) {
                 .padding(top = 5.dp),
             style = TextStyle(fontSize = 12.sp)
         )
-
-//        val nutritionPercentage = (value / maxValue * 100).toInt()
-//        Text(
-//            text = "($nutritionPercentage%)",
-//            modifier = Modifier
-//                .padding(top = 5.dp)
-//        )
     }
 }
 

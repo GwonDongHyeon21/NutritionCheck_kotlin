@@ -44,7 +44,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 var foodList = mutableListOf<NutritionDataModel>()
-var dateFoodList = mutableListOf<NutritionDataModel>()
+var addList = mutableListOf<NutritionDataModel>()
+var list = mutableListOf<NutritionDataModel>()
 
 @Composable
 fun NutritionAddLayout(meal: String) {
@@ -67,7 +68,7 @@ fun NutritionAddLayout(meal: String) {
                     .padding(20.dp),
             ) {
                 if (isLoading) {
-                    items(dateFoodList) { food ->
+                    items(list) { food ->
                         Text(text = food.foodName)
                     }
                 }
@@ -80,6 +81,7 @@ fun NutritionAddLayout(meal: String) {
                     .fillMaxSize(0.1f)
                     .align(Alignment.CenterHorizontally)
                     .clickable {
+                        foodList = mutableListOf()
                         isDialog = true
                         isLoading = false
                     },
@@ -92,8 +94,16 @@ fun NutritionAddLayout(meal: String) {
                 .padding(bottom = 60.dp)
                 .align(Alignment.BottomCenter),
             onClick = {
-                addDataToFirebase(date, meal, dateFoodList)
-                dateFoodList = mutableListOf()
+                addDataToFirebase(date, meal, addList)
+                addList.forEach {
+                    when (meal) {
+                        "아침" -> breakfastFoodList.add(it)
+                        "점심" -> lunchFoodList.add(it)
+                        "저녁" -> dinnerFoodList.add(it)
+                    }
+                }
+                addList = mutableListOf()
+                //Toast 메시지, 액션 효과, 뒤로 이동
             }
         ) {
             Text(text = "저장")
@@ -102,8 +112,8 @@ fun NutritionAddLayout(meal: String) {
         if (isDialog)
             NutritionDataDialog(
                 stateUpdate = {
-                    isDialog = false
                     isLoading = true
+                    isDialog = false
                 },
             )
 
@@ -194,7 +204,8 @@ fun NutritionDataDialog(stateUpdate: () -> Unit) {
                                 text = food.foodName,
                                 style = TextStyle(fontSize = 20.sp),
                                 modifier = Modifier.clickable {
-                                    dateFoodList.add(food)
+                                    addList.add(food)
+                                    list.add(food)
                                     stateUpdate()
                                 },
                             )

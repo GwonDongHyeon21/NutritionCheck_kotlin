@@ -105,19 +105,19 @@ private fun parseResponse(xml: String) {
                     when (tagName) {
                         "item" -> {}
 
-                        "FOOD_NM_KR" -> foodName = parser.nextText()
-                        "AMT_NUM1" -> calories = parser.nextText()
-                        "AMT_NUM7" -> carbohydrate = parser.nextText()
-                        "AMT_NUM8" -> sugar = parser.nextText()
-                        "AMT_NUM9" -> dietaryFiber = parser.nextText()
-                        "AMT_NUM3" -> protein = parser.nextText()
-                        "AMT_NUM4" -> province = parser.nextText()
-                        "AMT_NUM25" -> saturatedFat = parser.nextText()
-                        "AMT_NUM24" -> cholesterol = parser.nextText()
-                        "AMT_NUM14" -> sodium = parser.nextText()
-                        "AMT_NUM13" -> potassium = parser.nextText()
-                        "AMT_NUM16" -> vitaminA = parser.nextText()
-                        "AMT_NUM22" -> vitaminC = parser.nextText()
+                        "FOOD_NM_KR" -> foodName = parser.nextText() ?: "0.0"
+                        "AMT_NUM1" -> calories = parser.nextText() ?: "0.0"
+                        "AMT_NUM7" -> carbohydrate = parser.nextText() ?: "0.0"
+                        "AMT_NUM8" -> sugar = parser.nextText() ?: "0.0"
+                        "AMT_NUM9" -> dietaryFiber = parser.nextText() ?: "0.0"
+                        "AMT_NUM3" -> protein = parser.nextText() ?: "0.0"
+                        "AMT_NUM4" -> province = parser.nextText() ?: "0.0"
+                        "AMT_NUM25" -> saturatedFat = parser.nextText() ?: "0.0"
+                        "AMT_NUM24" -> cholesterol = parser.nextText() ?: "0.0"
+                        "AMT_NUM14" -> sodium = parser.nextText() ?: "0.0"
+                        "AMT_NUM13" -> potassium = parser.nextText() ?: "0.0"
+                        "AMT_NUM15" -> vitaminA = parser.nextText() ?: "0.0"
+                        "AMT_NUM22" -> vitaminC = parser.nextText() ?: "0.0"
                     }
                 }
 
@@ -151,9 +151,3 @@ private fun parseResponse(xml: String) {
         e.printStackTrace()
     }
 }
-
-//https://apis.data.go.kr/1471000/FoodNtrCpntDbInfo01/getFoodNtrCpntDbInq01
-// ?serviceKey= MhaV5RpnKLUv9MFQZr7AYd96McfCLNFksae09wTWgCQpXD4hQNXIlcAOugChDbrFeGrrB%2BqN%2FjBQJP%2F6pGCQ%2Fw%3D%3D
-// &pageNo=1
-// &numOfRows=3
-// &type=xml
