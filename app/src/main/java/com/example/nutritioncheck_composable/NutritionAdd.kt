@@ -43,13 +43,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 var foodList = mutableListOf<NutritionDataModel>()
-var addList = mutableListOf<NutritionDataModel>()
-var list = mutableListOf<NutritionDataModel>()
 
 @Composable
-fun NutritionAddLayout(meal: String, date:String) {
-    var isDialog by remember { mutableStateOf(false) }
+fun NutritionAddLayout(meal: String, date: String) {
+    var isAddDialog by remember { mutableStateOf(false) }
+    var isFoodDialog by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
+    var selectedFood by remember { mutableStateOf(listOf<NutritionDataModel>()) }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -67,7 +67,13 @@ fun NutritionAddLayout(meal: String, date:String) {
             ) {
                 if (isLoading) {
                     items(list) { food ->
-                        Text(text = food.foodName)
+                        Text(
+                            text = food.foodName,
+                            modifier = Modifier.clickable {
+                                selectedFood = listOf(food)
+                                isFoodDialog = true
+                            },
+                        )
                     }
                 }
             }
@@ -80,7 +86,7 @@ fun NutritionAddLayout(meal: String, date:String) {
                     .align(Alignment.CenterHorizontally)
                     .clickable {
                         foodList = mutableListOf()
-                        isDialog = true
+                        isAddDialog = true
                         isLoading = false
                     },
                 tint = Color(100, 60, 180, 255),
@@ -107,14 +113,19 @@ fun NutritionAddLayout(meal: String, date:String) {
             Text(text = "저장")
         }
 
-        if (isDialog)
+        if (isAddDialog)
             NutritionDataDialog(
                 stateUpdate = {
                     isLoading = true
-                    isDialog = false
+                    isAddDialog = false
                 }
             )
 
+        if (isFoodDialog)
+            FoodDialog(
+                selectedFood = selectedFood,
+                stateUpdate = { isFoodDialog = false }
+            )
     }
 }
 
@@ -138,9 +149,7 @@ fun NutritionDataDialog(stateUpdate: () -> Unit) {
             shape = RoundedCornerShape(16.dp)
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(20.dp),
+                modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.Top
             ) {
                 Row(
@@ -212,6 +221,38 @@ fun NutritionDataDialog(stateUpdate: () -> Unit) {
                         LoadingLayout()
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun FoodDialog(selectedFood: List<NutritionDataModel>, stateUpdate: () -> Unit) {
+    Dialog(
+        onDismissRequest = { stateUpdate() }
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxHeight(0.6f)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(20.dp)
+            ) {
+//                Text(text = selectedFood.first().foodName)
+//                Text(text = selectedFood.first().calories)
+//                Text(text = selectedFood.first().carbohydrate)
+//                Text(text = selectedFood.first().sugar)
+//                Text(text = selectedFood.first().dietaryFiber)
+//                Text(text = selectedFood.first().protein)
+//                Text(text = selectedFood.first().province)
+//                Text(text = selectedFood.first().saturatedFat)
+//                Text(text = selectedFood.first().cholesterol)
+//                Text(text = selectedFood.first().sodium)
+//                Text(text = selectedFood.first().potassium)
+//                Text(text = selectedFood.first().vitaminA)
+//                Text(text = selectedFood.first().vitaminC)
             }
         }
     }

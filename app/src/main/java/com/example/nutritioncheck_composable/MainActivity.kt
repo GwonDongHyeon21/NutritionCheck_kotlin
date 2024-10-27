@@ -44,6 +44,9 @@ var breakfastFoodList = mutableListOf<NutritionDataModel>()
 var lunchFoodList = mutableListOf<NutritionDataModel>()
 var dinnerFoodList = mutableListOf<NutritionDataModel>()
 
+var addList = mutableListOf<NutritionDataModel>()
+var list = mutableListOf<NutritionDataModel>()
+
 class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth

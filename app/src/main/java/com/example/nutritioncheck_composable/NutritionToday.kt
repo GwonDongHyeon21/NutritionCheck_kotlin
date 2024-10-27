@@ -26,9 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -50,7 +48,6 @@ var selectedDate = ""
 @Composable
 fun NutritionTodayLayout(navController: NavController) {
     var isDialog by remember { mutableStateOf(false) }
-    var selectedDate by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -136,8 +133,7 @@ fun MealRow(
 ) {
     Surface(
         modifier = Modifier
-            .fillMaxWidth(0.8f)
-            .fillMaxHeight(0.8f)
+            .fillMaxSize(0.8f)
             .shadow(10.dp, RoundedCornerShape(16.dp))
             .clickable {
                 addList = mutableListOf()
