@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,9 +23,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -35,31 +37,46 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.example.nutritioncheck_composable.database.getDataFromFirebase
 import com.example.nutritioncheck_composable.model.NutritionDataModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
+var selectedDate = ""
+
 @Composable
 fun NutritionTodayLayout(navController: NavController) {
     var isDialog by remember { mutableStateOf(false) }
+    var selectedDate by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
-            .padding(start = 40.dp, end = 40.dp, top = 40.dp, bottom = 60.dp),
+            .padding(start = 40.dp, top = 40.dp, end = 40.dp, bottom = 80.dp),
     ) {
         Box(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         ) {
-            Text(
-                text = "영양 체크",
-                modifier = Modifier
-                    .align(Alignment.Center),
-                style = TextStyle(fontSize = 30.sp),
-            )
+            Column(
+                modifier = Modifier.align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "영양 체크",
+                    style = TextStyle(fontSize = 30.sp),
+                )
+                Text(
+                    text = SimpleDateFormat(
+                        "yyyy년 MM월 dd일",
+                        Locale.getDefault()
+                    ).format(System.currentTimeMillis()),
+                    modifier = Modifier.padding(top = 5.dp),
+                )
+            }
 
             IconButton(
                 onClick = { isDialog = true },
@@ -79,9 +96,9 @@ fun NutritionTodayLayout(navController: NavController) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f),
+                .weight(2f),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.Center
         ) {
             MealRow("아침", breakfastFoodList, navController)
         }
@@ -89,9 +106,9 @@ fun NutritionTodayLayout(navController: NavController) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f),
+                .weight(2f),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.Center
         ) {
             MealRow("점심", lunchFoodList, navController)
         }
@@ -99,17 +116,16 @@ fun NutritionTodayLayout(navController: NavController) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f),
+                .weight(2f),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.Center
         ) {
             MealRow("저녁", dinnerFoodList, navController)
         }
     }
 
-    if (isDialog) {
+    if (isDialog)
         DatePickerDialog(stateUpdate = { isDialog = false })
-    }
 }
 
 @Composable
@@ -118,49 +134,36 @@ fun MealRow(
     foodList: MutableList<NutritionDataModel>,
     navController: NavController,
 ) {
-    Text(
-        text = mealType,
+    Surface(
         modifier = Modifier
-            .wrapContentSize(),
-        style = TextStyle(fontSize = 15.sp)
-    )
-
-    Row(
-        modifier = Modifier.fillMaxSize(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
+            .fillMaxWidth(0.8f)
+            .fillMaxHeight(0.8f)
+            .shadow(10.dp, RoundedCornerShape(16.dp))
+            .clickable {
+                addList = mutableListOf()
+                list = foodList.toMutableList()
+                navController.navigate("NutritionAdd/$mealType/$selectedDate")
+            },
     ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .fillMaxHeight(0.7f)
-                .shadow(10.dp, RoundedCornerShape(16.dp))
-                .clickable {
-                    addList = mutableListOf()
-                    list = foodList.toMutableList()
-                    navController.navigate("NutritionAdd/$mealType")
-                },
-        ) {
-            if (foodList.isEmpty()) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "비어 있습니다.",
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally),
-                        style = TextStyle(color = Color.Gray)
-                    )
-                }
-            } else {
-                LazyColumn(
+        if (foodList.isEmpty()) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = mealType,
                     modifier = Modifier
-                        .padding(20.dp)
-                ) {
-                    items(foodList) { food ->
-                        Text(text = food.foodName)
-                    }
+                        .align(Alignment.CenterHorizontally),
+                    style = TextStyle(color = Color.Gray)
+                )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(20.dp)
+            ) {
+                items(foodList) { food ->
+                    Text(text = food.foodName)
                 }
             }
         }
@@ -175,17 +178,28 @@ fun DatePickerDialog(stateUpdate: () -> Unit) {
     DatePickerDialog(
         onDismissRequest = { stateUpdate() },
         confirmButton = {
-//            음식 리스트 업데이트
-
+            TextButton(
+                onClick = {
+                    selectedDate = datePickerState.selectedDateMillis?.let {
+                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
+                    }.toString()
+                    getDataFromFirebase(selectedDate) {
+                        breakfastFoodList = it[0].toMutableList()
+                        lunchFoodList = it[1].toMutableList()
+                        dinnerFoodList = it[2].toMutableList()
+                        stateUpdate()
+                    }
+                }
+            ) { Text(text = "확인") }
         },
-        dismissButton = { stateUpdate() }
+        dismissButton = { TextButton(onClick = { stateUpdate() }) { Text(text = "취소") } },
+        modifier = Modifier.padding(10.dp)
     ) {
-        DatePicker(state = datePickerState)
+        DatePicker(
+            title = null,
+            showModeToggle = false,
+            state = datePickerState,
+            modifier = Modifier.padding(top = 20.dp)
+        )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewNutritionToday() {
-    NutritionTodayLayout(rememberNavController())
 }

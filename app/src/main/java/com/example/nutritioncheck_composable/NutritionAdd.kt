@@ -41,17 +41,15 @@ import com.example.nutritioncheck_composable.loading.LoadingLayout
 import com.example.nutritioncheck_composable.model.NutritionDataModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 var foodList = mutableListOf<NutritionDataModel>()
 var addList = mutableListOf<NutritionDataModel>()
 var list = mutableListOf<NutritionDataModel>()
 
 @Composable
-fun NutritionAddLayout(meal: String) {
+fun NutritionAddLayout(meal: String, date:String) {
     var isDialog by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
-    val date = LocalDate.now().toString()
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -114,7 +112,7 @@ fun NutritionAddLayout(meal: String) {
                 stateUpdate = {
                     isLoading = true
                     isDialog = false
-                },
+                }
             )
 
     }
@@ -222,5 +220,5 @@ fun NutritionDataDialog(stateUpdate: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewNutritionAdd() {
-    NutritionAddLayout("")
+    NutritionAddLayout("", "")
 }

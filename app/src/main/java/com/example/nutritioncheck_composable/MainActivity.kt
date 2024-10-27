@@ -17,7 +17,6 @@ import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -100,12 +99,16 @@ fun LayoutNavigator() {
             NutritionTodayLayout(navController)
         }
         composable(
-            route = "NutritionAdd/{meal}",
-            arguments = listOf(navArgument("meal") { type = NavType.StringType })
+            route = "NutritionAdd/{meal}/{selectedDate}",
+            arguments = listOf(
+                navArgument("meal") { type = NavType.StringType },
+                navArgument("selectedDate") { type = NavType.StringType },
+            )
         ) { backStackEntry ->
-            val meal = backStackEntry.arguments?.getString("meal")
+            val meal = backStackEntry.arguments?.getString("meal").toString()
+            val date = backStackEntry.arguments?.getString("selectedDate").toString()
 
-            NutritionAddLayout(meal.toString())
+            NutritionAddLayout(meal, date)
         }
     }
 }
@@ -149,10 +152,4 @@ fun TabLayout(navController: NavController) {
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewTabLayout() {
-    TabLayout(rememberNavController())
 }

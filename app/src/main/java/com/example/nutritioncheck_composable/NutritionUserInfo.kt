@@ -28,7 +28,7 @@ fun NutritionUserInfoLayout() {
     var nutritionWeekData = emptyList<Pair<String, Pair<Float, Float>>>()
     var isLoading by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-    var selectedDate = LocalDate.now()
+    val selectedDate = LocalDate.now()
 
     LaunchedEffect(selectedDate) {
         coroutineScope.launch(Dispatchers.IO) {

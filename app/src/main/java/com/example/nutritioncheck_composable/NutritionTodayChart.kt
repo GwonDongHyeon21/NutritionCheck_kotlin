@@ -85,9 +85,3 @@ fun NutritionTodayChart(label: String, value: Float, maxValue: Float) {
         )
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewNutritionTodayChart() {
-    NutritionTodayChartLayout()
-}
