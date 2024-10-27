@@ -9,8 +9,11 @@ import com.example.nutritioncheck_composable.uid
 
 fun getDataFromFirebase(
     date: String,
-    callback: (Boolean) -> Unit
+    callback: (List<List<NutritionDataModel>>) -> Unit
 ) {
+    val breakfastList = mutableListOf<NutritionDataModel>()
+    val lunchList = mutableListOf<NutritionDataModel>()
+    val dinnerList = mutableListOf<NutritionDataModel>()
     DB.child(uid).get().addOnSuccessListener { dataSnapshot ->
         for (dataDate in dataSnapshot.children) {
             if (dataDate.key == date) {
@@ -43,16 +46,16 @@ fun getDataFromFirebase(
                         )
 
                         when (dataMeal.key) {
-                            "아침" -> breakfastFoodList.add(nutritionData)
-                            "점심" -> lunchFoodList.add(nutritionData)
-                            "저녁" -> dinnerFoodList.add(nutritionData)
+                            "아침" -> breakfastList.add(nutritionData)
+                            "점심" -> lunchList.add(nutritionData)
+                            "저녁" -> dinnerList.add(nutritionData)
                         }
                     }
                 }
             }
         }
-        callback(true)
+        callback(listOf(breakfastList, lunchList, dinnerList))
     }.addOnFailureListener {
-        callback(false)
+        callback(emptyList())
     }
 }

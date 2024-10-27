@@ -52,7 +52,7 @@ fun NutritionUserInfoLayout() {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 nutritionWeekData.forEach { (label, values) ->
-                    DateNutritionChart(label, values.first, values.second)
+                    NutritionDateChart(label, values.first, values.second)
                 }
             }
         } else {

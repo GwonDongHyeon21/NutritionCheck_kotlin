@@ -83,19 +83,19 @@ private fun parseResponse(xml: String) {
         parser.nextTag()
 
         var eventType = parser.eventType
-        var foodName: String? = null
-        var calories: String? = null
-        var carbohydrate: String? = null
-        var sugar: String? = null
-        var dietaryFiber: String? = null
-        var protein: String? = null
-        var province: String? = null
-        var saturatedFat: String? = null
-        var cholesterol: String? = null
-        var sodium: String? = null
-        var potassium: String? = null
-        var vitaminA: String? = null
-        var vitaminC: String? = null
+        var foodName = ""
+        var calories = ""
+        var carbohydrate = ""
+        var sugar = ""
+        var dietaryFiber = ""
+        var protein = ""
+        var province = ""
+        var saturatedFat = ""
+        var cholesterol = ""
+        var sodium = ""
+        var potassium = ""
+        var vitaminA = ""
+        var vitaminC = ""
 
         while (eventType != XmlPullParser.END_DOCUMENT) {
             val tagName = parser.name
@@ -105,19 +105,19 @@ private fun parseResponse(xml: String) {
                     when (tagName) {
                         "item" -> {}
 
-                        "FOOD_NM_KR" -> foodName = parser.nextText() ?: "0.0"
-                        "AMT_NUM1" -> calories = parser.nextText() ?: "0.0"
-                        "AMT_NUM7" -> carbohydrate = parser.nextText() ?: "0.0"
-                        "AMT_NUM8" -> sugar = parser.nextText() ?: "0.0"
-                        "AMT_NUM9" -> dietaryFiber = parser.nextText() ?: "0.0"
-                        "AMT_NUM3" -> protein = parser.nextText() ?: "0.0"
-                        "AMT_NUM4" -> province = parser.nextText() ?: "0.0"
-                        "AMT_NUM25" -> saturatedFat = parser.nextText() ?: "0.0"
-                        "AMT_NUM24" -> cholesterol = parser.nextText() ?: "0.0"
-                        "AMT_NUM14" -> sodium = parser.nextText() ?: "0.0"
-                        "AMT_NUM13" -> potassium = parser.nextText() ?: "0.0"
-                        "AMT_NUM15" -> vitaminA = parser.nextText() ?: "0.0"
-                        "AMT_NUM22" -> vitaminC = parser.nextText() ?: "0.0"
+                        "FOOD_NM_KR" -> foodName = parser.nextText()
+                        "AMT_NUM1" -> calories = parser.nextText()
+                        "AMT_NUM7" -> carbohydrate = parser.nextText()
+                        "AMT_NUM8" -> sugar = parser.nextText()
+                        "AMT_NUM9" -> dietaryFiber = parser.nextText()
+                        "AMT_NUM3" -> protein = parser.nextText()
+                        "AMT_NUM4" -> province = parser.nextText()
+                        "AMT_NUM25" -> saturatedFat = parser.nextText()
+                        "AMT_NUM24" -> cholesterol = parser.nextText()
+                        "AMT_NUM14" -> sodium = parser.nextText()
+                        "AMT_NUM13" -> potassium = parser.nextText()
+                        "AMT_NUM15" -> vitaminA = parser.nextText()
+                        "AMT_NUM22" -> vitaminC = parser.nextText()
                     }
                 }
 
@@ -125,19 +125,19 @@ private fun parseResponse(xml: String) {
                     if (tagName == "item") {
                         foodList.add(
                             NutritionDataModel(
-                                foodName.toString(),
-                                calories.toString(),
-                                carbohydrate.toString(),
-                                sugar.toString(),
-                                dietaryFiber.toString(),
-                                protein.toString(),
-                                province.toString(),
-                                saturatedFat.toString(),
-                                cholesterol.toString(),
-                                sodium.toString(),
-                                potassium.toString(),
-                                vitaminA.toString(),
-                                vitaminC.toString(),
+                                foodName,
+                                calories.takeIf { it.isNotEmpty() } ?: "0",
+                                carbohydrate.takeIf { it.isNotEmpty() } ?: "0",
+                                sugar.takeIf { it.isNotEmpty() } ?: "0",
+                                dietaryFiber.takeIf { it.isNotEmpty() } ?: "0",
+                                protein.takeIf { it.isNotEmpty() } ?: "0",
+                                province.takeIf { it.isNotEmpty() } ?: "0",
+                                saturatedFat.takeIf { it.isNotEmpty() } ?: "0",
+                                cholesterol.takeIf { it.isNotEmpty() } ?: "0",
+                                sodium.takeIf { it.isNotEmpty() } ?: "0",
+                                potassium.takeIf { it.isNotEmpty() } ?: "0",
+                                vitaminA.takeIf { it.isNotEmpty() } ?: "0",
+                                vitaminC.takeIf { it.isNotEmpty() } ?: "0",
                             )
                         )
                     }

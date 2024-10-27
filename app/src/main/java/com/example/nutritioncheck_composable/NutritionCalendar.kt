@@ -5,8 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DatePicker
@@ -18,7 +20,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,16 +31,30 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.nutritioncheck_composable.chart.nutritionChart
+import com.example.nutritioncheck_composable.database.getDataFromFirebase
+import com.example.nutritioncheck_composable.loading.LoadingLayout
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NutritionCalendarLayout() {
     val datePickerState = rememberDatePickerState()
-    val coroutineScope = rememberCoroutineScope()
-    var isLoading by remember { mutableStateOf(false) }
-    var text by remember { mutableStateOf("날짜를 선택해주세요.") }
+    var isLoading by remember { mutableStateOf(true) }
+    var nutritionDateChart by remember { mutableStateOf(listOf<Pair<String, Pair<Float, Float>>>()) }
+
+    LaunchedEffect(datePickerState.selectedDateMillis) {
+        val formattedDate = datePickerState.selectedDateMillis?.let {
+            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
+        }
+        isLoading = true
+        getDataFromFirebase(formattedDate.toString()) {
+            nutritionDateChart =
+                nutritionChart(it[0].toList(), it[1].toList(), it[2].toList()).toMutableList()
+            isLoading = false
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -51,45 +66,41 @@ fun NutritionCalendarLayout() {
             modifier = Modifier
                 .padding(top = 10.dp)
         )
-        LaunchedEffect(datePickerState.selectedDateMillis) {
-            if (datePickerState.selectedDateMillis != null) {
-//                coroutineScope.launch(Dispatchers.IO) {
-                    text = "잠시만 기다려주세요."
-                    isLoading = false
-                    // 데이터 불러오기
-                    isLoading = true
-//                }
-            }
-        }
 
         if (isLoading) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 40.dp, end = 40.dp, bottom = 80.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                nutritionData.forEach { (label, values) ->
-                    DateNutritionChart(label, values.first, values.second)
-                }
-            }
-        } else {
             Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = text,
-                    modifier = Modifier.padding(bottom = 40.dp),
-                )
+                modifier = Modifier.padding(bottom = 40.dp)
+            ) { LoadingLayout() }
+        } else {
+            if (datePickerState.selectedDateMillis != null) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 40.dp, end = 40.dp, bottom = 80.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    nutritionDateChart.forEach { (label, values) ->
+                        NutritionDateChart(label, values.first, values.second)
+                    }
+                }
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "날짜를 선택하세요.",
+                        modifier = Modifier.padding(bottom = 40.dp),
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun DateNutritionChart(label: String, value: Float, maxValue: Float) {
+fun NutritionDateChart(label: String, value: Float, maxValue: Float) {
     Column(
         modifier = Modifier
             .fillMaxHeight(),

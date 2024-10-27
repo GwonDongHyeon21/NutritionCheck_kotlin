@@ -17,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -38,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.nutritioncheck_composable.api.nutritionInfo
 import com.example.nutritioncheck_composable.database.addDataToFirebase
+import com.example.nutritioncheck_composable.loading.LoadingLayout
 import com.example.nutritioncheck_composable.model.NutritionDataModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -131,9 +131,7 @@ fun NutritionDataDialog(stateUpdate: () -> Unit) {
     var searchText = ""
 
     Dialog(
-        onDismissRequest = {
-            stateUpdate()
-        }
+        onDismissRequest = { stateUpdate() }
     ) {
         Card(
             modifier = Modifier
@@ -212,17 +210,8 @@ fun NutritionDataDialog(stateUpdate: () -> Unit) {
                         }
                     }
                 } else {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        if (isProgress) {
-                            CircularProgressIndicator(
-                                color = Color.Gray,
-                                trackColor = Color(100, 60, 180, 255),
-                            )
-                        }
+                    if (isProgress) {
+                        LoadingLayout()
                     }
                 }
             }
