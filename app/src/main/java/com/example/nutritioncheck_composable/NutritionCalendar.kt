@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,7 +45,7 @@ fun NutritionCalendarLayout() {
 
     LaunchedEffect(datePickerState.selectedDateMillis) {
         val formattedDate = datePickerState.selectedDateMillis?.let {
-            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
+            SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault()).format(it)
         }
         isLoading = true
         getDataFromFirebase(formattedDate.toString()) {
@@ -77,8 +78,10 @@ fun NutritionCalendarLayout() {
                         .padding(start = 40.dp, end = 40.dp, bottom = 80.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
+                    val width =
+                        ((LocalConfiguration.current.screenWidthDp - 80) / nutritionDateChart.size) * 0.8
                     nutritionDateChart.forEach { (label, values) ->
-                        NutritionDateChart(label, values.first, values.second)
+                        NutritionDateChart(width, label, values.first, values.second)
                     }
                 }
             } else {
@@ -98,17 +101,16 @@ fun NutritionCalendarLayout() {
 }
 
 @Composable
-fun NutritionDateChart(label: String, value: Float, maxValue: Float) {
+fun NutritionDateChart(width: Double, label: String, value: Float, maxValue: Float) {
     Column(
-        modifier = Modifier
-            .fillMaxHeight(),
+        modifier = Modifier.fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Canvas(
             modifier = Modifier
-                .width(20.dp)
-                .fillMaxHeight(0.7f)
+                .width(width.dp)
+                .fillMaxHeight(0.6f)
                 .shadow(10.dp)
                 .background(Color(230, 230, 230, 255))
         ) {
@@ -128,9 +130,7 @@ fun NutritionDateChart(label: String, value: Float, maxValue: Float) {
 
         Text(
             text = label,
-            modifier = Modifier
-                .width(10.dp)
-                .padding(top = 5.dp),
+            modifier = Modifier.width(10.dp),
             style = TextStyle(fontSize = 12.sp)
         )
     }

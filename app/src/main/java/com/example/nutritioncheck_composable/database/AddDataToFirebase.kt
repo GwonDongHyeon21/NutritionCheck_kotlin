@@ -1,8 +1,7 @@
 package com.example.nutritioncheck_composable.database
 
-import com.example.nutritioncheck_composable.DB
+import com.example.nutritioncheck_composable.ValueSingleton
 import com.example.nutritioncheck_composable.model.NutritionDataModel
-import com.example.nutritioncheck_composable.uid
 
 fun addDataToFirebase(
     date: String,
@@ -10,6 +9,6 @@ fun addDataToFirebase(
     nutritionData: MutableList<NutritionDataModel>,
 ) {
     nutritionData.forEach {
-        DB.child(uid).child(date).child(meal).push().setValue(it)
+        ValueSingleton.DB.child(ValueSingleton.uid).child(date).child(meal).push().setValue(it)
     }
 }

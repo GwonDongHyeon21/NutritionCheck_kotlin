@@ -30,27 +30,30 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 object ValueSingleton {
     var uid: String = ""
+    val DB = Firebase.database.reference
 }
-
-val db = Firebase.database
-val DB = db.reference
-val uid = ValueSingleton.uid
 
 var breakfastFoodList = mutableListOf<NutritionDataModel>()
 var lunchFoodList = mutableListOf<NutritionDataModel>()
 var dinnerFoodList = mutableListOf<NutritionDataModel>()
 
+var dateFoodList = mutableListOf<NutritionDataModel>()
 var addList = mutableListOf<NutritionDataModel>()
-var list = mutableListOf<NutritionDataModel>()
+var foodList = mutableListOf<NutritionDataModel>()
+
+var selectedDate: String = SimpleDateFormat(
+    "yyyy년 MM월 dd일",
+    Locale.getDefault()
+).format(System.currentTimeMillis())
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private val date = LocalDate.now().toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +69,7 @@ class MainActivity : ComponentActivity() {
         lunchFoodList = mutableListOf()
         dinnerFoodList = mutableListOf()
 
-        getDataFromFirebase(date) {
+        getDataFromFirebase(selectedDate) {
             breakfastFoodList = it[0].toMutableList()
             lunchFoodList = it[1].toMutableList()
             dinnerFoodList = it[2].toMutableList()
@@ -111,7 +114,7 @@ fun LayoutNavigator() {
             val meal = backStackEntry.arguments?.getString("meal").toString()
             val date = backStackEntry.arguments?.getString("selectedDate").toString()
 
-            NutritionAddLayout(meal, date)
+            NutritionAddLayout(navController, meal, date)
         }
     }
 }

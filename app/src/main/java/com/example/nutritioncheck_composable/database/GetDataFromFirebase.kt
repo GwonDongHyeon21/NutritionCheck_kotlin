@@ -1,11 +1,7 @@
 package com.example.nutritioncheck_composable.database
 
-import com.example.nutritioncheck_composable.DB
-import com.example.nutritioncheck_composable.breakfastFoodList
-import com.example.nutritioncheck_composable.dinnerFoodList
-import com.example.nutritioncheck_composable.lunchFoodList
+import com.example.nutritioncheck_composable.ValueSingleton
 import com.example.nutritioncheck_composable.model.NutritionDataModel
-import com.example.nutritioncheck_composable.uid
 
 fun getDataFromFirebase(
     date: String,
@@ -14,7 +10,7 @@ fun getDataFromFirebase(
     val breakfastList = mutableListOf<NutritionDataModel>()
     val lunchList = mutableListOf<NutritionDataModel>()
     val dinnerList = mutableListOf<NutritionDataModel>()
-    DB.child(uid).get().addOnSuccessListener { dataSnapshot ->
+    ValueSingleton.DB.child(ValueSingleton.uid).get().addOnSuccessListener { dataSnapshot ->
         for (dataDate in dataSnapshot.children) {
             if (dataDate.key == date) {
                 for (dataMeal in dataDate.children) {

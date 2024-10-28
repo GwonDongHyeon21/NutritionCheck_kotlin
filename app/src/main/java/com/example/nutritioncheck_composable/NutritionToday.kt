@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,11 +43,14 @@ import com.example.nutritioncheck_composable.model.NutritionDataModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-var selectedDate = ""
-
 @Composable
 fun NutritionTodayLayout(navController: NavController) {
     var isDialog by remember { mutableStateOf(false) }
+    var date by remember { mutableStateOf(selectedDate) }
+
+    LaunchedEffect(selectedDate) {
+        date = selectedDate
+    }
 
     Column(
         modifier = Modifier
@@ -67,10 +70,7 @@ fun NutritionTodayLayout(navController: NavController) {
                     style = TextStyle(fontSize = 30.sp),
                 )
                 Text(
-                    text = SimpleDateFormat(
-                        "yyyy년 MM월 dd일",
-                        Locale.getDefault()
-                    ).format(System.currentTimeMillis()),
+                    text = date,
                     modifier = Modifier.padding(top = 5.dp),
                 )
             }
@@ -137,7 +137,7 @@ fun MealRow(
             .shadow(10.dp, RoundedCornerShape(16.dp))
             .clickable {
                 addList = mutableListOf()
-                list = foodList.toMutableList()
+                dateFoodList = foodList.toMutableList()
                 navController.navigate("NutritionAdd/$mealType/$selectedDate")
             },
     ) {
@@ -177,7 +177,7 @@ fun DatePickerDialog(stateUpdate: () -> Unit) {
             TextButton(
                 onClick = {
                     selectedDate = datePickerState.selectedDateMillis?.let {
-                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
+                        SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault()).format(it)
                     }.toString()
                     getDataFromFirebase(selectedDate) {
                         breakfastFoodList = it[0].toMutableList()
