@@ -19,11 +19,11 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import com.example.nutritioncheck_composable.chart.nutritionChart
+import com.example.nutritioncheck_composable.chart.nutritionChartData
 
 @Composable
 fun NutritionTodayChartLayout() {
-    val nutritionTodayData = nutritionChart(breakfastFoodList, lunchFoodList, dinnerFoodList)
+    val nutritionTodayData = nutritionChartData(breakfastFoodList, lunchFoodList, dinnerFoodList)
 
     Column(
         modifier = Modifier

@@ -30,7 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.nutritioncheck_composable.chart.nutritionChart
+import com.example.nutritioncheck_composable.chart.nutritionChartData
 import com.example.nutritioncheck_composable.database.getDataFromFirebase
 import com.example.nutritioncheck_composable.loading.LoadingLayout
 import java.text.SimpleDateFormat
@@ -50,7 +50,7 @@ fun NutritionCalendarLayout() {
         isLoading = true
         getDataFromFirebase(formattedDate.toString()) {
             nutritionDateChart =
-                nutritionChart(it[0].toList(), it[1].toList(), it[2].toList()).toMutableList()
+                nutritionChartData(it[0].toList(), it[1].toList(), it[2].toList()).toMutableList()
             isLoading = false
         }
     }

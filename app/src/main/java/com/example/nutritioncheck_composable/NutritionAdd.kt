@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,6 +45,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.example.nutritioncheck_composable.api.nutritionInfo
 import com.example.nutritioncheck_composable.database.addDataToFirebase
+import com.example.nutritioncheck_composable.database.deleteDataToFirebase
 import com.example.nutritioncheck_composable.loading.LoadingLayout
 import com.example.nutritioncheck_composable.model.NutritionDataModel
 import kotlinx.coroutines.Dispatchers
@@ -78,6 +80,7 @@ fun NutritionAddLayout(navController: NavController, meal: String, date: String)
                                 text = food.foodName,
                                 modifier = Modifier.clickable {
                                     selectedFood = listOf(food)
+                                    isLoading = false
                                     isFoodDialog = true
                                 },
                             )
@@ -150,9 +153,13 @@ fun NutritionAddLayout(navController: NavController, meal: String, date: String)
             )
 
         if (isFoodDialog)
-            FoodDialog(
-                selectedFood = selectedFood,
-                stateUpdate = { isFoodDialog = false }
+            FoodDetailDialog(
+                selectedFood = selectedFood.first(),
+                meal = meal,
+                stateUpdate = {
+                    isLoading = true
+                    isFoodDialog = false
+                }
             )
     }
 }
@@ -197,8 +204,7 @@ fun NutritionDataDialog(stateUpdate: () -> Unit) {
                                     isEnabled = false
                             }
                         },
-                        modifier = Modifier
-                            .weight(1f),
+                        modifier = Modifier.weight(1f),
                         placeholder = {
                             Text(
                                 text = "음식을 입력하세요.",
@@ -277,22 +283,25 @@ fun NutritionDataDialog(stateUpdate: () -> Unit) {
 }
 
 @Composable
-fun FoodDialog(selectedFood: List<NutritionDataModel>, stateUpdate: () -> Unit) {
-    val selectedFoodList = selectedFood.first()
+fun FoodDetailDialog(
+    selectedFood: NutritionDataModel,
+    meal: String,
+    stateUpdate: () -> Unit
+) {
     val foodAttributes = listOf(
-        "이름" to selectedFoodList.foodName,
-        "칼로리" to selectedFoodList.calories,
-        "탄수화물" to selectedFoodList.carbohydrate,
-        "당류" to selectedFoodList.sugar,
-        "식이섬유" to selectedFoodList.dietaryFiber,
-        "단백질" to selectedFoodList.protein,
-        "지방" to selectedFoodList.province,
-        "포화지방" to selectedFoodList.saturatedFat,
-        "콜레스테롤" to selectedFoodList.cholesterol,
-        "나트륨" to selectedFoodList.sodium,
-        "칼륨" to selectedFoodList.potassium,
-        "비타민A" to selectedFoodList.vitaminA,
-        "비타민C" to selectedFoodList.vitaminC
+        "이름" to selectedFood.foodName,
+        "칼로리" to selectedFood.calories,
+        "탄수화물" to selectedFood.carbohydrate,
+        "당류" to selectedFood.sugar,
+        "식이섬유" to selectedFood.dietaryFiber,
+        "단백질" to selectedFood.protein,
+        "지방" to selectedFood.province,
+        "포화지방" to selectedFood.saturatedFat,
+        "콜레스테롤" to selectedFood.cholesterol,
+        "나트륨" to selectedFood.sodium,
+        "칼륨" to selectedFood.potassium,
+        "비타민A" to selectedFood.vitaminA,
+        "비타민C" to selectedFood.vitaminC
     )
 
     Dialog(
@@ -306,6 +315,7 @@ fun FoodDialog(selectedFood: List<NutritionDataModel>, stateUpdate: () -> Unit) 
         ) {
             Column(
                 modifier = Modifier.padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 foodAttributes.forEach { (label, value) ->
                     Row(
@@ -315,6 +325,19 @@ fun FoodDialog(selectedFood: List<NutritionDataModel>, stateUpdate: () -> Unit) 
                         Text(text = label)
                         Text(text = value)
                     }
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+                Button(onClick = {
+                    deleteDataToFirebase(selectedDate, meal, selectedFood)
+                    when (meal) {
+                        "아침" -> breakfastFoodList.remove(selectedFood)
+                        "점심" -> lunchFoodList.remove(selectedFood)
+                        "저녁" -> dinnerFoodList.remove(selectedFood)
+                    }
+                    stateUpdate()
+                }) {
+                    Text(text = "삭제하기")
                 }
             }
         }

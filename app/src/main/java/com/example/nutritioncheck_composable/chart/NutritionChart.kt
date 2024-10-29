@@ -2,7 +2,7 @@ package com.example.nutritioncheck_composable.chart
 
 import com.example.nutritioncheck_composable.model.NutritionDataModel
 
-fun nutritionChart(
+fun nutritionChartData(
     breakfastList: List<NutritionDataModel>,
     lunchList: List<NutritionDataModel>,
     dinnerList: List<NutritionDataModel>

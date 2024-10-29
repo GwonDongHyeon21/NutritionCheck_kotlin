@@ -1,12 +1,15 @@
 package com.example.nutritioncheck_composable.database
 
-fun deleteDataToFirebase() {
-//    DB.child(uid).child(date).get().addOnSuccessListener { dataSnapshot ->
-//        for (data in dataSnapshot.children) {
-//            val todoUniqueValue = data.child("unique").getValue(String::class.java)
-//            if (todoUnique.contains(todoUniqueValue)) {
-//                data.ref.removeValue()
-//            }
-//        }
-//    }
+import com.example.nutritioncheck_composable.ValueSingleton
+import com.example.nutritioncheck_composable.model.NutritionDataModel
+
+fun deleteDataToFirebase(date: String, meal: String, selectedFood: NutritionDataModel) {
+    ValueSingleton.DB.child(ValueSingleton.uid).child(date).child(meal).get()
+        .addOnSuccessListener { dataSnapshot ->
+            dataSnapshot.children.forEach {
+                val keyValue = it.child("key").getValue(Long::class.java)
+                if (keyValue == selectedFood.key)
+                    it.ref.removeValue()
+            }
+        }
 }

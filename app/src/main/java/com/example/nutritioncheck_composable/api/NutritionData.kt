@@ -125,6 +125,7 @@ private fun parseResponse(xml: String) {
                     if (tagName == "item") {
                         foodList.add(
                             NutritionDataModel(
+                                System.currentTimeMillis(),
                                 foodName,
                                 calories.takeIf { it.isNotEmpty() } ?: "0",
                                 carbohydrate.takeIf { it.isNotEmpty() } ?: "0",

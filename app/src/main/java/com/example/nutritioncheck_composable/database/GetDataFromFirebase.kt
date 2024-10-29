@@ -11,11 +11,13 @@ fun getDataFromFirebase(
     val lunchList = mutableListOf<NutritionDataModel>()
     val dinnerList = mutableListOf<NutritionDataModel>()
     ValueSingleton.DB.child(ValueSingleton.uid).get().addOnSuccessListener { dataSnapshot ->
-        for (dataDate in dataSnapshot.children) {
+        for (dataDate in dataSnapshot.children.reversed()) {
             if (dataDate.key == date) {
                 for (dataMeal in dataDate.children) {
                     for (data in dataMeal.children) {
                         val nutritionData = NutritionDataModel(
+                            key = data.child("key").getValue(Long::class.java)
+                                ?: 0,
                             foodName = data.child("foodName").getValue(String::class.java)
                                 ?: "",
                             calories = data.child("calories").getValue(String::class.java)

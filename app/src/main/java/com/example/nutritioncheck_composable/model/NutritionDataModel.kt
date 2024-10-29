@@ -1,7 +1,8 @@
 package com.example.nutritioncheck_composable.model
 
 data class NutritionDataModel(
-    val foodName: String,
+    val key: Long,              //고유값(현재시각)
+    val foodName: String,       //식품이름
     val calories: String,       //에너지(kcal)
     val carbohydrate: String,   //탄수화물(g)
     val sugar: String,          //당류(g)
