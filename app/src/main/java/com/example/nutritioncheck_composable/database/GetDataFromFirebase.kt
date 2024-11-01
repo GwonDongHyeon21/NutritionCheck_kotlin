@@ -41,6 +41,12 @@ fun getDataFromFirebase(
                                 ?: "",
                             vitaminC = data.child("vitaminC").getValue(String::class.java)
                                 ?: "",
+                            amountPer = data.child("amountPer").getValue(String::class.java)
+                                ?: "",
+                            amountAll = data.child("amountAll").getValue(String::class.java)
+                                ?: "",
+                            makerName = data.child("makerName").getValue(String::class.java)
+                                ?: "",
                         )
 
                         when (dataMeal.key) {

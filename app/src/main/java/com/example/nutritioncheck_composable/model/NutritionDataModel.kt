@@ -15,4 +15,7 @@ data class NutritionDataModel(
     val potassium: String,      //칼륨(mg)
     val vitaminA: String,       //비타민 A(μg)
     val vitaminC: String,       //비타민 C(mg)
+    var amountPer: String,      //1회섭취참고량
+    var amountAll: String,      //식품중량
+    var makerName: String,      //업체명
 )

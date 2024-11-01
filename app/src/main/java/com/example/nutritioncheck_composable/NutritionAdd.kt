@@ -39,10 +39,12 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.nutritioncheck_composable.api.nutritionInfo
 import com.example.nutritioncheck_composable.database.addDataToFirebase
 import com.example.nutritioncheck_composable.database.deleteDataToFirebase
@@ -182,7 +184,6 @@ fun NutritionDataDialog(stateUpdate: () -> Unit) {
             modifier = Modifier
                 .fillMaxHeight(0.6f)
                 .fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
         ) {
             Column(
                 modifier = Modifier.padding(20.dp),
@@ -288,6 +289,7 @@ fun FoodDetailDialog(
     meal: String,
     stateUpdate: () -> Unit
 ) {
+    val context = LocalContext.current
     val foodAttributes = listOf(
         "이름" to selectedFood.foodName,
         "칼로리" to selectedFood.calories,
@@ -301,7 +303,10 @@ fun FoodDetailDialog(
         "나트륨" to selectedFood.sodium,
         "칼륨" to selectedFood.potassium,
         "비타민A" to selectedFood.vitaminA,
-        "비타민C" to selectedFood.vitaminC
+        "비타민C" to selectedFood.vitaminC,
+        "1회 섭취참고량" to selectedFood.amountPer,
+        "식품중량" to selectedFood.amountAll,
+        "업체명" to selectedFood.makerName,
     )
 
     Dialog(
@@ -311,7 +316,6 @@ fun FoodDetailDialog(
             modifier = Modifier
                 .fillMaxHeight(0.6f)
                 .fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
         ) {
             Column(
                 modifier = Modifier.padding(20.dp),
@@ -335,6 +339,7 @@ fun FoodDetailDialog(
                         "점심" -> lunchFoodList.remove(selectedFood)
                         "저녁" -> dinnerFoodList.remove(selectedFood)
                     }
+                    Toast.makeText(context, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
                     stateUpdate()
                 }) {
                     Text(text = "삭제하기")
@@ -342,4 +347,10 @@ fun FoodDetailDialog(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewNutritionAdd(){
+    NutritionAddLayout(rememberNavController(), "", "")
 }

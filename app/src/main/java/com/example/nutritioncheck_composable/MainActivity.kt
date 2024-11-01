@@ -17,6 +17,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -150,7 +151,7 @@ fun TabLayout(navController: NavController) {
         HorizontalPager(
             state = pagerState,
         ) { page ->
-            when (page) {
+             when (page) {
                 0 -> NutritionTodayLayout(navController)
                 1 -> NutritionTodayChartLayout()
                 2 -> NutritionCalendarLayout()
@@ -158,4 +159,10 @@ fun TabLayout(navController: NavController) {
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewMainActivity(){
+    LayoutNavigator()
 }

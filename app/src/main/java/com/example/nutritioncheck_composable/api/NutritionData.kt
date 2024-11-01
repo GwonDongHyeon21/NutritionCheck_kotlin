@@ -1,5 +1,6 @@
 package com.example.nutritioncheck_composable.api
 
+import android.util.Log
 import android.util.Xml
 import com.example.nutritioncheck_composable.BuildConfig
 import com.example.nutritioncheck_composable.foodList
@@ -96,6 +97,9 @@ private fun parseResponse(xml: String) {
         var potassium = ""
         var vitaminA = ""
         var vitaminC = ""
+        var amountPer = ""
+        var amountAll = ""
+        var makerName = ""
 
         while (eventType != XmlPullParser.END_DOCUMENT) {
             val tagName = parser.name
@@ -118,6 +122,9 @@ private fun parseResponse(xml: String) {
                         "AMT_NUM13" -> potassium = parser.nextText()
                         "AMT_NUM15" -> vitaminA = parser.nextText()
                         "AMT_NUM22" -> vitaminC = parser.nextText()
+                        "NUTRI_AMOUNT_SERVING" -> amountPer = parser.nextText()
+                        "Z10500" -> amountAll = parser.nextText()
+                        "MAKER_NM" -> makerName = parser.nextText()
                     }
                 }
 
@@ -139,6 +146,9 @@ private fun parseResponse(xml: String) {
                                 potassium.takeIf { it.isNotEmpty() } ?: "0",
                                 vitaminA.takeIf { it.isNotEmpty() } ?: "0",
                                 vitaminC.takeIf { it.isNotEmpty() } ?: "0",
+                                amountPer.takeIf { it.isNotEmpty() } ?: "",
+                                amountAll.takeIf { it.isNotEmpty() } ?: "",
+                                makerName.takeIf { it.isNotEmpty() } ?: "없음",
                             )
                         )
                     }

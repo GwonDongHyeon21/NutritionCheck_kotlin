@@ -35,9 +35,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.nutritioncheck_composable.database.getDataFromFirebase
 import com.example.nutritioncheck_composable.model.NutritionDataModel
 import java.text.SimpleDateFormat
@@ -198,4 +200,10 @@ fun DatePickerDialog(stateUpdate: () -> Unit) {
             modifier = Modifier.padding(top = 20.dp)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewNutritionToday(){
+    NutritionTodayLayout(rememberNavController())
 }

@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.nutritioncheck_composable.chart.nutritionChartData
 
@@ -85,4 +86,10 @@ fun NutritionTodayChart(height: Double, label: String, value: Float, maxValue: F
                 .padding(end = 10.dp)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewNutritionChart() {
+    NutritionTodayChartLayout()
 }
