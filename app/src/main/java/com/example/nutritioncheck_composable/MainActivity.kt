@@ -123,12 +123,7 @@ fun LayoutNavigator() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TabLayout(navController: NavController) {
-    val tabs = listOf(
-        Icons.Filled.Check,
-        Icons.AutoMirrored.Filled.List,
-        Icons.Filled.DateRange,
-//        Icons.Filled.AccountCircle
-    )
+    val tabs = listOf(Icons.Filled.Check, Icons.AutoMirrored.Filled.List, Icons.Filled.DateRange)
     val pagerState = rememberPagerState(0, 0f) { tabs.size }
     val coroutineScope = rememberCoroutineScope()
 
@@ -151,11 +146,10 @@ fun TabLayout(navController: NavController) {
         HorizontalPager(
             state = pagerState,
         ) { page ->
-             when (page) {
+            when (page) {
                 0 -> NutritionTodayLayout(navController)
                 1 -> NutritionTodayChartLayout()
                 2 -> NutritionCalendarLayout()
-//                3 -> NutritionUserInfoLayout()
             }
         }
     }
@@ -163,6 +157,6 @@ fun TabLayout(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewMainActivity(){
+fun PreviewMainActivity() {
     LayoutNavigator()
 }

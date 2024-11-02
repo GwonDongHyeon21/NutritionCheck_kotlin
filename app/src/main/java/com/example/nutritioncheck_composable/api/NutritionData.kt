@@ -1,6 +1,6 @@
 package com.example.nutritioncheck_composable.api
 
-import android.util.Log
+import android.annotation.SuppressLint
 import android.util.Xml
 import com.example.nutritioncheck_composable.BuildConfig
 import com.example.nutritioncheck_composable.foodList
@@ -20,38 +20,32 @@ fun nutritionInfo(food: String) {
         StringBuilder("https://apis.data.go.kr/1471000/FoodNtrCpntDbInfo01/getFoodNtrCpntDbInq01") // URL
     urlBuilder.append(
         "?" + URLEncoder.encode(
-            "serviceKey",
-            "UTF-8"
+            "serviceKey", "UTF-8"
         ) + "=" + BuildConfig.NUTRITION_DATA_API
     ) // Service Key
     urlBuilder.append(
         "&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(
-            "1",
-            "UTF-8"
+            "1", "UTF-8"
         )
     ) // 페이지 번호
     urlBuilder.append(
         "&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(
-            "100",
-            "UTF-8"
+            "100", "UTF-8"
         )
     ) // 한 페이지 결과 수
     urlBuilder.append(
         "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(
-            "xml",
-            "UTF-8"
+            "xml", "UTF-8"
         )
     ) // XML/JSON 여부
     urlBuilder.append(
         "&" + URLEncoder.encode("FOOD_NM_KR", "UTF-8") + "=" + URLEncoder.encode(
-            food,
-            "UTF-8"
+            food, "UTF-8"
         )
     ) // 식품명
     urlBuilder.append(
         "&" + URLEncoder.encode("MAKER_NM", "UTF-8") + "=" + URLEncoder.encode(
-            "",
-            "UTF-8"
+            "", "UTF-8"
         )
     ) // 업체명
 
@@ -76,6 +70,7 @@ fun nutritionInfo(food: String) {
     parseResponse(sb.toString())
 }
 
+@SuppressLint("DefaultLocale")
 private fun parseResponse(xml: String) {
     try {
         val parser: XmlPullParser = Xml.newPullParser()
@@ -130,27 +125,73 @@ private fun parseResponse(xml: String) {
 
                 XmlPullParser.END_TAG -> {
                     if (tagName == "item") {
-                        foodList.add(
-                            NutritionDataModel(
-                                System.currentTimeMillis(),
-                                foodName,
-                                calories.takeIf { it.isNotEmpty() } ?: "0",
-                                carbohydrate.takeIf { it.isNotEmpty() } ?: "0",
-                                sugar.takeIf { it.isNotEmpty() } ?: "0",
-                                dietaryFiber.takeIf { it.isNotEmpty() } ?: "0",
-                                protein.takeIf { it.isNotEmpty() } ?: "0",
-                                province.takeIf { it.isNotEmpty() } ?: "0",
-                                saturatedFat.takeIf { it.isNotEmpty() } ?: "0",
-                                cholesterol.takeIf { it.isNotEmpty() } ?: "0",
-                                sodium.takeIf { it.isNotEmpty() } ?: "0",
-                                potassium.takeIf { it.isNotEmpty() } ?: "0",
-                                vitaminA.takeIf { it.isNotEmpty() } ?: "0",
-                                vitaminC.takeIf { it.isNotEmpty() } ?: "0",
-                                amountPer.takeIf { it.isNotEmpty() } ?: "",
-                                amountAll.takeIf { it.isNotEmpty() } ?: "",
-                                makerName.takeIf { it.isNotEmpty() } ?: "없음",
-                            )
-                        )
+                        var amount = 0.0
+                        var multiply = 1.0
+                        if (amountAll.isNotEmpty())
+                            amount = amountAll.replace(",", "").replace("g", "").toDouble()
+                        if (amountPer.isEmpty() && amount > 100)
+                            multiply = amount / 100
+
+                        foodList.add(NutritionDataModel(
+                            System.currentTimeMillis(),
+                            foodName,
+                            String.format(
+                                "%.1f",
+                                (calories.takeIf { it.isNotEmpty() }?.replace(",", "")?.toDouble()
+                                    ?: 0.0) * multiply
+                            ),
+                            String.format(
+                                "%.1f",
+                                (carbohydrate.takeIf { it.isNotEmpty() }?.replace(",", "")
+                                    ?.toDouble() ?: 0.0) * multiply
+                            ),
+                            String.format(
+                                "%.1f", (sugar.takeIf { it.isNotEmpty() }?.replace(",", "")
+                                    ?.toDouble() ?: 0.0) * multiply
+                            ),
+                            String.format(
+                                "%.1f",
+                                (dietaryFiber.takeIf { it.isNotEmpty() }?.replace(",", "")
+                                    ?.toDouble() ?: 0.0) * multiply
+                            ),
+                            String.format(
+                                "%.1f", (protein.takeIf { it.isNotEmpty() }?.replace(",", "")
+                                    ?.toDouble() ?: 0.0) * multiply
+                            ),
+                            String.format(
+                                "%.1f", (province.takeIf { it.isNotEmpty() }?.replace(",", "")
+                                    ?.toDouble() ?: 0.0) * multiply
+                            ),
+                            String.format(
+                                "%.1f",
+                                (saturatedFat.takeIf { it.isNotEmpty() }?.replace(",", "")
+                                    ?.toDouble() ?: 0.0) * multiply
+                            ),
+                            String.format(
+                                "%.1f",
+                                (cholesterol.takeIf { it.isNotEmpty() }?.replace(",", "")
+                                    ?.toDouble() ?: 0.0) * multiply
+                            ),
+                            String.format(
+                                "%.1f", (sodium.takeIf { it.isNotEmpty() }?.replace(",", "")
+                                    ?.toDouble() ?: 0.0) * multiply
+                            ),
+                            String.format(
+                                "%.1f", (potassium.takeIf { it.isNotEmpty() }?.replace(",", "")
+                                    ?.toDouble() ?: 0.0) * multiply
+                            ),
+                            String.format(
+                                "%.1f", (vitaminA.takeIf { it.isNotEmpty() }?.replace(",", "")
+                                    ?.toDouble() ?: 0.0) * multiply
+                            ),
+                            String.format(
+                                "%.1f", (vitaminC.takeIf { it.isNotEmpty() }?.replace(",", "")
+                                    ?.toDouble() ?: 0.0) * multiply
+                            ),
+                            amountPer.takeIf { it.isNotEmpty() } ?: "",
+                            amountAll.takeIf { it.isNotEmpty() } ?: "",
+                            makerName.takeIf { it.isNotEmpty() } ?: "없음",
+                        ))
                     }
                 }
             }

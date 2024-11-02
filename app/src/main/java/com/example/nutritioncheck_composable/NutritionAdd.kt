@@ -41,7 +41,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -73,7 +72,7 @@ fun NutritionAddLayout(navController: NavController, meal: String, date: String)
                         .fillMaxHeight(0.5f)
                         .fillMaxWidth(0.7f)
                         .padding(bottom = 40.dp)
-                        .border(0.dp, Color.Black, RoundedCornerShape(16.dp))
+                        .border(1.dp, Color.Gray, RoundedCornerShape(16.dp))
                         .padding(20.dp),
                 ) {
                     if (isLoading) {
@@ -95,7 +94,7 @@ fun NutritionAddLayout(navController: NavController, meal: String, date: String)
                         .fillMaxHeight(0.5f)
                         .fillMaxWidth(0.7f)
                         .padding(bottom = 40.dp)
-                        .border(0.dp, Color.Black, RoundedCornerShape(16.dp)),
+                        .border(1.dp, Color.Gray, RoundedCornerShape(16.dp)),
                     color = Color.Transparent,
                 ) {
                     Column(
@@ -175,7 +174,6 @@ fun NutritionDataDialog(stateUpdate: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     var searchText = ""
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     Dialog(
         onDismissRequest = { stateUpdate() }
@@ -189,6 +187,8 @@ fun NutritionDataDialog(stateUpdate: () -> Unit) {
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.Top
             ) {
+                val keyboardController = LocalSoftwareKeyboardController.current
+
                 Row(
                     modifier = Modifier.padding(bottom = 10.dp)
                 ) {
@@ -244,6 +244,7 @@ fun NutritionDataDialog(stateUpdate: () -> Unit) {
                             isEnabled = false
                             searchText = text
                             focusManager.clearFocus()
+                            keyboardController?.hide()
                             coroutineScope.launch(Dispatchers.IO) {
                                 foodList = mutableListOf()
                                 nutritionInfo(text)
@@ -264,7 +265,6 @@ fun NutritionDataDialog(stateUpdate: () -> Unit) {
                         items(foodList) { food ->
                             Text(
                                 text = food.foodName,
-                                style = TextStyle(fontSize = 20.sp),
                                 modifier = Modifier.clickable {
                                     addList.add(food)
                                     dateFoodList.add(food)
@@ -339,6 +339,7 @@ fun FoodDetailDialog(
                         "점심" -> lunchFoodList.remove(selectedFood)
                         "저녁" -> dinnerFoodList.remove(selectedFood)
                     }
+                    dateFoodList.remove(selectedFood)
                     Toast.makeText(context, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
                     stateUpdate()
                 }) {
@@ -351,6 +352,6 @@ fun FoodDetailDialog(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewNutritionAdd(){
+fun PreviewNutritionAdd() {
     NutritionAddLayout(rememberNavController(), "", "")
 }
