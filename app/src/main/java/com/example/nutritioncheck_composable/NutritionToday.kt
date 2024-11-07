@@ -137,10 +137,7 @@ fun MealRow(
         modifier = Modifier
             .fillMaxSize(0.8f)
             .shadow(10.dp, RoundedCornerShape(16.dp))
-            .clickable {
-                addList = mutableListOf()
-                dateFoodList = foodList.toMutableList()
-                navController.navigate("NutritionAdd/$mealType/$selectedDate")
+            .clickable { navController.navigate("NutritionAdd/$mealType/$selectedDate")
             },
     ) {
         if (foodList.isEmpty()) {

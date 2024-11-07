@@ -43,8 +43,6 @@ var breakfastFoodList = mutableListOf<NutritionDataModel>()
 var lunchFoodList = mutableListOf<NutritionDataModel>()
 var dinnerFoodList = mutableListOf<NutritionDataModel>()
 
-var dateFoodList = mutableListOf<NutritionDataModel>()
-var addList = mutableListOf<NutritionDataModel>()
 var foodList = mutableListOf<NutritionDataModel>()
 
 var selectedDate: String = SimpleDateFormat(
@@ -55,6 +53,10 @@ var selectedDate: String = SimpleDateFormat(
 class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private var selectedDate: String = SimpleDateFormat(
+        "yyyy년 MM월 dd일",
+        Locale.getDefault()
+    ).format(System.currentTimeMillis())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -54,9 +54,19 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NutritionAddLayout(navController: NavController, meal: String, date: String) {
+    val dateFoodList = remember {
+        when (meal) {
+            "아침" -> breakfastFoodList.toMutableList()
+            "점심" -> lunchFoodList.toMutableList()
+            "저녁" -> dinnerFoodList.toMutableList()
+            else -> {
+                mutableListOf()
+            }
+        }
+    }
+    var addList = remember { mutableListOf<NutritionDataModel>() }
     var isAddDialog by remember { mutableStateOf(false) }
     var isFoodDialog by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(true) }
     var selectedFood by remember { mutableStateOf(listOf<NutritionDataModel>()) }
     val context = LocalContext.current
 
@@ -75,17 +85,14 @@ fun NutritionAddLayout(navController: NavController, meal: String, date: String)
                         .border(1.dp, Color.Gray, RoundedCornerShape(16.dp))
                         .padding(20.dp),
                 ) {
-                    if (isLoading) {
-                        items(dateFoodList) { food ->
-                            Text(
-                                text = food.foodName,
-                                modifier = Modifier.clickable {
-                                    selectedFood = listOf(food)
-                                    isLoading = false
-                                    isFoodDialog = true
-                                },
-                            )
-                        }
+                    items(dateFoodList) { food ->
+                        Text(
+                            text = food.foodName,
+                            modifier = Modifier.clickable {
+                                selectedFood = listOf(food)
+                                isFoodDialog = true
+                            },
+                        )
                     }
                 }
             } else {
@@ -118,7 +125,6 @@ fun NutritionAddLayout(navController: NavController, meal: String, date: String)
                     .clickable {
                         foodList = mutableListOf()
                         isAddDialog = true
-                        isLoading = false
                     },
                 tint = Color(100, 60, 180, 255),
             )
@@ -140,33 +146,31 @@ fun NutritionAddLayout(navController: NavController, meal: String, date: String)
                 addList = mutableListOf()
                 Toast.makeText(context, "저장되었습니다.", Toast.LENGTH_SHORT).show()
                 navController.popBackStack()
-            }
+            },
+            enabled = addList.isNotEmpty()
         ) {
             Text(text = "저장")
         }
 
         if (isAddDialog)
-            NutritionDataDialog(
-                stateUpdate = {
-                    isLoading = true
-                    isAddDialog = false
-                }
-            )
+            NutritionDataDialog(dateFoodList, addList) { isAddDialog = false }
 
         if (isFoodDialog)
             FoodDetailDialog(
                 selectedFood = selectedFood.first(),
                 meal = meal,
-                stateUpdate = {
-                    isLoading = true
-                    isFoodDialog = false
-                }
-            )
+                dateFoodList = dateFoodList,
+            ) { isFoodDialog = false }
+
     }
 }
 
 @Composable
-fun NutritionDataDialog(stateUpdate: () -> Unit) {
+fun NutritionDataDialog(
+    dateFoodList: MutableList<NutritionDataModel>,
+    addList: MutableList<NutritionDataModel>,
+    stateUpdate: () -> Unit
+) {
     var text by remember { mutableStateOf("") }
     var isEnabled by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
@@ -287,6 +291,7 @@ fun NutritionDataDialog(stateUpdate: () -> Unit) {
 fun FoodDetailDialog(
     selectedFood: NutritionDataModel,
     meal: String,
+    dateFoodList: MutableList<NutritionDataModel>,
     stateUpdate: () -> Unit
 ) {
     val context = LocalContext.current
