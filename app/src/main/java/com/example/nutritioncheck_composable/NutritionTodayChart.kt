@@ -24,7 +24,11 @@ import com.example.nutritioncheck_composable.chart.nutritionChartData
 
 @Composable
 fun NutritionTodayChartLayout() {
-    val nutritionTodayData = nutritionChartData(breakfastFoodList, lunchFoodList, dinnerFoodList)
+    val nutritionTodayData = nutritionChartData(
+        ValueSingleton.breakfastFoodList,
+        ValueSingleton.lunchFoodList,
+        ValueSingleton.dinnerFoodList
+    )
 
     Column(
         modifier = Modifier

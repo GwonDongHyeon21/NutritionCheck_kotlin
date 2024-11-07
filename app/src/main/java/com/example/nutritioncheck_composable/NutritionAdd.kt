@@ -56,9 +56,9 @@ import kotlinx.coroutines.launch
 fun NutritionAddLayout(navController: NavController, meal: String, date: String) {
     val dateFoodList = remember {
         when (meal) {
-            "아침" -> breakfastFoodList.toMutableList()
-            "점심" -> lunchFoodList.toMutableList()
-            "저녁" -> dinnerFoodList.toMutableList()
+            "아침" -> ValueSingleton.breakfastFoodList.toMutableList()
+            "점심" -> ValueSingleton.lunchFoodList.toMutableList()
+            "저녁" -> ValueSingleton.dinnerFoodList.toMutableList()
             else -> {
                 mutableListOf()
             }
@@ -123,7 +123,7 @@ fun NutritionAddLayout(navController: NavController, meal: String, date: String)
                     .fillMaxSize(0.1f)
                     .align(Alignment.CenterHorizontally)
                     .clickable {
-                        foodList = mutableListOf()
+                        ValueSingleton.foodList = mutableListOf()
                         isAddDialog = true
                     },
                 tint = Color(100, 60, 180, 255),
@@ -138,9 +138,9 @@ fun NutritionAddLayout(navController: NavController, meal: String, date: String)
                 addDataToFirebase(date, meal, addList)
                 addList.forEach {
                     when (meal) {
-                        "아침" -> breakfastFoodList.add(it)
-                        "점심" -> lunchFoodList.add(it)
-                        "저녁" -> dinnerFoodList.add(it)
+                        "아침" -> ValueSingleton.breakfastFoodList.add(it)
+                        "점심" -> ValueSingleton.lunchFoodList.add(it)
+                        "저녁" -> ValueSingleton.dinnerFoodList.add(it)
                     }
                 }
                 addList = mutableListOf()
@@ -231,7 +231,7 @@ fun NutritionDataDialog(
                                     focusManager.clearFocus()
                                     keyboardController?.hide()
                                     coroutineScope.launch(Dispatchers.IO) {
-                                        foodList = mutableListOf()
+                                        ValueSingleton.foodList = mutableListOf()
                                         nutritionInfo(text)
                                         isLoading = true
                                         isProgress = false
@@ -250,7 +250,7 @@ fun NutritionDataDialog(
                             focusManager.clearFocus()
                             keyboardController?.hide()
                             coroutineScope.launch(Dispatchers.IO) {
-                                foodList = mutableListOf()
+                                ValueSingleton.foodList = mutableListOf()
                                 nutritionInfo(text)
                                 isLoading = true
                                 isProgress = false
@@ -266,7 +266,7 @@ fun NutritionDataDialog(
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        items(foodList) { food ->
+                        items(ValueSingleton.foodList) { food ->
                             Text(
                                 text = food.foodName,
                                 modifier = Modifier.clickable {
@@ -338,11 +338,11 @@ fun FoodDetailDialog(
 
                 Spacer(modifier = Modifier.weight(1f))
                 Button(onClick = {
-                    deleteDataToFirebase(selectedDate, meal, selectedFood)
+                    deleteDataToFirebase(ValueSingleton.selectedDate, meal, selectedFood)
                     when (meal) {
-                        "아침" -> breakfastFoodList.remove(selectedFood)
-                        "점심" -> lunchFoodList.remove(selectedFood)
-                        "저녁" -> dinnerFoodList.remove(selectedFood)
+                        "아침" -> ValueSingleton.breakfastFoodList.remove(selectedFood)
+                        "점심" -> ValueSingleton.lunchFoodList.remove(selectedFood)
+                        "저녁" -> ValueSingleton.dinnerFoodList.remove(selectedFood)
                     }
                     dateFoodList.remove(selectedFood)
                     Toast.makeText(context, "삭제되었습니다.", Toast.LENGTH_SHORT).show()

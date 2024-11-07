@@ -25,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,11 +47,6 @@ import java.util.Locale
 @Composable
 fun NutritionTodayLayout(navController: NavController) {
     var isDialog by remember { mutableStateOf(false) }
-    var date by remember { mutableStateOf(selectedDate) }
-
-    LaunchedEffect(selectedDate) {
-        date = selectedDate
-    }
 
     Column(
         modifier = Modifier
@@ -72,7 +66,7 @@ fun NutritionTodayLayout(navController: NavController) {
                     style = TextStyle(fontSize = 30.sp),
                 )
                 Text(
-                    text = date,
+                    text = ValueSingleton.selectedDate,
                     modifier = Modifier.padding(top = 5.dp),
                 )
             }
@@ -99,7 +93,7 @@ fun NutritionTodayLayout(navController: NavController) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            MealRow("아침", breakfastFoodList, navController)
+            MealRow("아침", ValueSingleton.breakfastFoodList, navController)
         }
 
         Row(
@@ -109,7 +103,7 @@ fun NutritionTodayLayout(navController: NavController) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            MealRow("점심", lunchFoodList, navController)
+            MealRow("점심", ValueSingleton.lunchFoodList, navController)
         }
 
         Row(
@@ -119,12 +113,12 @@ fun NutritionTodayLayout(navController: NavController) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            MealRow("저녁", dinnerFoodList, navController)
+            MealRow("저녁", ValueSingleton.dinnerFoodList, navController)
         }
     }
 
     if (isDialog)
-        DatePickerDialog(stateUpdate = { isDialog = false })
+        DatePickerDialog { isDialog = false }
 }
 
 @Composable
@@ -137,7 +131,8 @@ fun MealRow(
         modifier = Modifier
             .fillMaxSize(0.8f)
             .shadow(10.dp, RoundedCornerShape(16.dp))
-            .clickable { navController.navigate("NutritionAdd/$mealType/$selectedDate")
+            .clickable {
+                navController.navigate("NutritionAdd/$mealType/${ValueSingleton.selectedDate}")
             },
     ) {
         if (foodList.isEmpty()) {
@@ -175,13 +170,13 @@ fun DatePickerDialog(stateUpdate: () -> Unit) {
         confirmButton = {
             TextButton(
                 onClick = {
-                    selectedDate = datePickerState.selectedDateMillis?.let {
+                    ValueSingleton.selectedDate = datePickerState.selectedDateMillis?.let {
                         SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault()).format(it)
                     }.toString()
-                    getDataFromFirebase(selectedDate) {
-                        breakfastFoodList = it[0].toMutableList()
-                        lunchFoodList = it[1].toMutableList()
-                        dinnerFoodList = it[2].toMutableList()
+                    getDataFromFirebase(ValueSingleton.selectedDate) {
+                        ValueSingleton.breakfastFoodList = it[0].toMutableList()
+                        ValueSingleton.lunchFoodList = it[1].toMutableList()
+                        ValueSingleton.dinnerFoodList = it[2].toMutableList()
                         stateUpdate()
                     }
                 }
@@ -201,6 +196,6 @@ fun DatePickerDialog(stateUpdate: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewNutritionToday(){
+fun PreviewNutritionToday() {
     NutritionTodayLayout(rememberNavController())
 }

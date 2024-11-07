@@ -3,7 +3,7 @@ package com.example.nutritioncheck_composable.api
 import android.annotation.SuppressLint
 import android.util.Xml
 import com.example.nutritioncheck_composable.BuildConfig
-import com.example.nutritioncheck_composable.foodList
+import com.example.nutritioncheck_composable.ValueSingleton
 import com.example.nutritioncheck_composable.model.NutritionDataModel
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
@@ -132,7 +132,7 @@ private fun parseResponse(xml: String) {
                         if (amountPer.isEmpty() && amount > 100)
                             multiply = amount / 100
 
-                        foodList.add(NutritionDataModel(
+                        ValueSingleton.foodList.add(NutritionDataModel(
                             System.currentTimeMillis(),
                             foodName,
                             String.format(

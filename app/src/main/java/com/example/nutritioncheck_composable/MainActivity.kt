@@ -37,26 +37,22 @@ import java.util.Locale
 object ValueSingleton {
     var uid: String = ""
     val DB = Firebase.database.reference
+
+    var selectedDate: String = SimpleDateFormat(
+        "yyyy년 MM월 dd일",
+        Locale.getDefault()
+    ).format(System.currentTimeMillis())
+
+    var breakfastFoodList = mutableListOf<NutritionDataModel>()
+    var lunchFoodList = mutableListOf<NutritionDataModel>()
+    var dinnerFoodList = mutableListOf<NutritionDataModel>()
+
+    var foodList = mutableListOf<NutritionDataModel>()
 }
-
-var breakfastFoodList = mutableListOf<NutritionDataModel>()
-var lunchFoodList = mutableListOf<NutritionDataModel>()
-var dinnerFoodList = mutableListOf<NutritionDataModel>()
-
-var foodList = mutableListOf<NutritionDataModel>()
-
-var selectedDate: String = SimpleDateFormat(
-    "yyyy년 MM월 dd일",
-    Locale.getDefault()
-).format(System.currentTimeMillis())
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private var selectedDate: String = SimpleDateFormat(
-        "yyyy년 MM월 dd일",
-        Locale.getDefault()
-    ).format(System.currentTimeMillis())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,14 +64,10 @@ class MainActivity : ComponentActivity() {
         auth = FirebaseAuth.getInstance()
         signInAnonymously()
 
-        breakfastFoodList = mutableListOf()
-        lunchFoodList = mutableListOf()
-        dinnerFoodList = mutableListOf()
-
-        getDataFromFirebase(selectedDate) {
-            breakfastFoodList = it[0].toMutableList()
-            lunchFoodList = it[1].toMutableList()
-            dinnerFoodList = it[2].toMutableList()
+        getDataFromFirebase(ValueSingleton.selectedDate) {
+            ValueSingleton.breakfastFoodList = it[0].toMutableList()
+            ValueSingleton.lunchFoodList = it[1].toMutableList()
+            ValueSingleton.dinnerFoodList = it[2].toMutableList()
 
             setContent {
                 LayoutNavigator()
