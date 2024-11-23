@@ -1,4 +1,4 @@
-package com.example.nutritioncheck_composable
+package com.example.nutritioncheck_composable.ui
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -38,9 +38,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.nutritioncheck_composable.chart.nutritionChartData
+import com.example.nutritioncheck_composable.ui.chart.nutritionChartData
 import com.example.nutritioncheck_composable.database.getDataFromFirebase
-import com.example.nutritioncheck_composable.loading.LoadingLayout
+import com.example.nutritioncheck_composable.ui.loading.LoadingLayout
 import com.example.nutritioncheck_composable.model.NutritionDataModel
 import java.text.SimpleDateFormat
 import java.util.Locale

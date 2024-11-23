@@ -30,7 +30,7 @@ fun nutritionInfo(food: String) {
     ) // 페이지 번호
     urlBuilder.append(
         "&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(
-            "100", "UTF-8"
+            "30", "UTF-8"
         )
     ) // 한 페이지 결과 수
     urlBuilder.append(
@@ -80,6 +80,7 @@ private fun parseResponse(xml: String) {
 
         var eventType = parser.eventType
         var foodName = ""
+        var servingSize = ""
         var calories = ""
         var carbohydrate = ""
         var sugar = ""
@@ -105,6 +106,7 @@ private fun parseResponse(xml: String) {
                         "item" -> {}
 
                         "FOOD_NM_KR" -> foodName = parser.nextText()
+                        "SERVING_SIZE" -> servingSize = parser.nextText()
                         "AMT_NUM1" -> calories = parser.nextText()
                         "AMT_NUM7" -> carbohydrate = parser.nextText()
                         "AMT_NUM8" -> sugar = parser.nextText()
@@ -125,12 +127,11 @@ private fun parseResponse(xml: String) {
 
                 XmlPullParser.END_TAG -> {
                     if (tagName == "item") {
-                        var amount = 0.0
-                        var multiply = 1.0
-                        if (amountAll.isNotEmpty())
-                            amount = amountAll.replace(",", "").replace("g", "").toDouble()
-                        if (amountPer.isEmpty() && amount > 100)
-                            multiply = amount / 100
+                        val servingAmount = "\\d+".toRegex()
+                            .find(servingSize.replace(",", ""))?.value?.toIntOrNull() ?: 100
+                        val amount = "\\d+".toRegex()
+                            .find(amountAll.replace(",", ""))?.value?.toDoubleOrNull() ?: 100.0
+                        val multiply = "%.1f".format(amount / servingAmount).toDouble()
 
                         ValueSingleton.foodList.add(NutritionDataModel(
                             System.currentTimeMillis(),

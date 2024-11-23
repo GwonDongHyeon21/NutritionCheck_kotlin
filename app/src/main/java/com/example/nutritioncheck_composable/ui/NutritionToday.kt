@@ -1,4 +1,4 @@
-package com.example.nutritioncheck_composable
+package com.example.nutritioncheck_composable.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.nutritioncheck_composable.ValueSingleton
 import com.example.nutritioncheck_composable.database.getDataFromFirebase
 import com.example.nutritioncheck_composable.model.NutritionDataModel
 import java.text.SimpleDateFormat

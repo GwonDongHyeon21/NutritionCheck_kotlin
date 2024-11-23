@@ -1,4 +1,4 @@
-package com.example.nutritioncheck_composable.chart
+package com.example.nutritioncheck_composable.ui.chart
 
 import com.example.nutritioncheck_composable.model.NutritionDataModel
 

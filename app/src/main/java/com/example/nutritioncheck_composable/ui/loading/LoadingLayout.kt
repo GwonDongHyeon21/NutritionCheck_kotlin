@@ -1,4 +1,4 @@
-package com.example.nutritioncheck_composable.loading
+package com.example.nutritioncheck_composable.ui.loading
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

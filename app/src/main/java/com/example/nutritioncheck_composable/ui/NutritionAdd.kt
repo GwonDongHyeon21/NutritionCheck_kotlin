@@ -1,4 +1,4 @@
-package com.example.nutritioncheck_composable
+package com.example.nutritioncheck_composable.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.border
@@ -44,10 +44,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.nutritioncheck_composable.ValueSingleton
 import com.example.nutritioncheck_composable.api.nutritionInfo
 import com.example.nutritioncheck_composable.database.addDataToFirebase
 import com.example.nutritioncheck_composable.database.deleteDataToFirebase
-import com.example.nutritioncheck_composable.loading.LoadingLayout
+import com.example.nutritioncheck_composable.ui.loading.LoadingLayout
 import com.example.nutritioncheck_composable.model.NutritionDataModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -173,11 +174,13 @@ fun NutritionDataDialog(
 ) {
     var text by remember { mutableStateOf("") }
     var isEnabled by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(true) }
     var isProgress by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-    val focusManager = LocalFocusManager.current
+    var isFoodList = "음식을 입력하세요."
     var searchText = ""
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Dialog(
         onDismissRequest = { stateUpdate() }
@@ -191,8 +194,6 @@ fun NutritionDataDialog(
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.Top
             ) {
-                val keyboardController = LocalSoftwareKeyboardController.current
-
                 Row(
                     modifier = Modifier.padding(bottom = 10.dp)
                 ) {
@@ -230,6 +231,7 @@ fun NutritionDataDialog(
                                     searchText = text
                                     focusManager.clearFocus()
                                     keyboardController?.hide()
+                                    isFoodList = "검색 결과가 없습니다."
                                     coroutineScope.launch(Dispatchers.IO) {
                                         ValueSingleton.foodList = mutableListOf()
                                         nutritionInfo(text)
@@ -249,6 +251,7 @@ fun NutritionDataDialog(
                             searchText = text
                             focusManager.clearFocus()
                             keyboardController?.hide()
+                            isFoodList = "검색 결과가 없습니다."
                             coroutineScope.launch(Dispatchers.IO) {
                                 ValueSingleton.foodList = mutableListOf()
                                 nutritionInfo(text)
@@ -263,18 +266,30 @@ fun NutritionDataDialog(
                 }
 
                 if (isLoading) {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        items(ValueSingleton.foodList) { food ->
+                    if (ValueSingleton.foodList.isEmpty()) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
                             Text(
-                                text = food.foodName,
-                                modifier = Modifier.clickable {
-                                    addList.add(food)
-                                    dateFoodList.add(food)
-                                    stateUpdate()
-                                },
+                                text = isFoodList,
+                                style = TextStyle(color = Color.Gray)
                             )
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            items(ValueSingleton.foodList) { food ->
+                                Text(
+                                    text = food.foodName,
+                                    modifier = Modifier.clickable {
+                                        addList.add(food)
+                                        dateFoodList.add(food)
+                                        stateUpdate()
+                                    },
+                                )
+                            }
                         }
                     }
                 } else {
